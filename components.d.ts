@@ -12,8 +12,11 @@ declare module 'vue' {
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
+<<<<<<< HEAD
     VegeCard: typeof import('./src/components/VegeCard.vue')['default']
     VegeTools: typeof import('./src/components/VegeTools.vue')['default']
     VegeVideos: typeof import('./src/components/VegeVideos.vue')['default']
+=======
+>>>>>>> f76bd5020c186de4255ae4eec71f1f2cf3ff9de6
   }
 }
