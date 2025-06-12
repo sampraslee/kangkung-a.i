@@ -11,7 +11,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 # app/schemas/book_schemas.py
 from pydantic import BaseModel, Field
-from typing import Optional, Tuple
+from typing import Optional, Tuple, List
 
 app = FastAPI()
 app.add_middleware(
@@ -130,7 +130,7 @@ def read_root():
     return {"message": "Hello this is the birth of kangkung AI"}
 
 
-@app.post("/add-user")
+@app.post("/user-add")
 def add_user(user_data: UserModel):
     try:
         new_user = User(
@@ -147,7 +147,7 @@ def add_user(user_data: UserModel):
         )
 
 
-@app.get("/get-users")
+@app.get("/user-get-all")
 def list_user():
     try:
         users = session.query(User).order_by(
@@ -159,7 +159,7 @@ def list_user():
         )
 
 
-@app.post("/add-vegetable")
+@app.post("/vegetable-add")
 def add_vegetable(vegetable_data: VegetableModel):
     try:
         sunlight_range = None
@@ -189,7 +189,7 @@ def add_vegetable(vegetable_data: VegetableModel):
         )
 
 
-@app.get("/get-vegetables")
+@app.get("/vegetable-get-all")
 def list_vegetable():
     try:
         vegetables = session.query(Vegetable).order_by(
@@ -201,7 +201,7 @@ def list_vegetable():
         )
 
 
-@app.get("/get-vegetable/{vegetable_id}")
+@app.get("/vegetable-get/{vegetable_id}")
 def get_vegetable(vegetable_id: int):
     try:
         vegetable = session.query(Vegetable).filter_by(
@@ -216,7 +216,28 @@ def get_vegetable(vegetable_id: int):
 # USER_VEGETABLE_PROGRESS##########################################3
 
 
-@app.post("/user-vegetable-progress/")
+@app.get("/user-vegetable-get-all/{user_id}", response_model=List[UserVegetableProgressModel])
+def get_user_vegetable_progress_entries(user_id: int):
+    """
+    Retrieves all User Vegetable Progress entries for a specific user.
+    """
+    try:
+        user_progress_entries = session.query(UserVegetableProgress).filter(
+            UserVegetableProgress.user_id == user_id
+        ).all()
+
+        if not user_progress_entries:
+            return []
+
+        return user_progress_entries
+    except Exception as e:
+        raise HTTPException(
+            status_code=500,
+            detail=f"Error retrieving user vegetable progress: {str(e)}"
+        )
+
+
+@app.post("/user-vegetable-add/")
 def create_user_vegetable_progress_entry(progress_input: UserVegetableProgressModel):
     """
     Creates a new User Vegetable Progress entry.
