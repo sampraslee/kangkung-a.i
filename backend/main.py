@@ -1,4 +1,5 @@
 # Tolong susah sngtt
+<<<<<<< HEAD
 # app/main.py or app/core/dependencies.py (for get_db dependency)
 from sqlalchemy import Column, Integer, String, DateTime, Date, ForeignKey, Text, create_engine, Interval
 from sqlalchemy.dialects.postgresql import NUMRANGE
@@ -297,3 +298,5 @@ def create_user_vegetable_progress_entry(progress_input: UserVegetableProgressMo
         )
 
     return session_progress
+=======
+>>>>>>> e03bbe8aaacc028352a498e9db6d7724a0d91f6e
