@@ -1,5 +1,3 @@
-# Tolong susah sngtt
-<<<<<<< HEAD
 # app/main.py or app/core/dependencies.py (for get_db dependency)
 from sqlalchemy import Column, Integer, String, DateTime, Date, ForeignKey, Text, create_engine, Interval
 from sqlalchemy.dialects.postgresql import NUMRANGE
@@ -13,6 +11,9 @@ from fastapi.middleware.cors import CORSMiddleware
 # app/schemas/book_schemas.py
 from pydantic import BaseModel, Field
 from typing import Optional, Tuple, List
+import os
+from dotenv import load_dotenv
+load_dotenv()
 
 app = FastAPI()
 app.add_middleware(
@@ -25,10 +26,10 @@ app.add_middleware(
 
 # app/core/config.py (these variables should ideally come from environment variables)
 # Database URL (adjust username/password as needed)
-DB_USER = "postgres"
-DB_PASSWORD = "ayam"
-DB_HOST = "localhost"
-DB_NAME = "kangkung_ai_db"
+DB_USER = os.getenv("DB_USER", "postgres")
+DB_PASSWORD = os.getenv("DB_PASSWORD", "ayam")
+DB_HOST = os.getenv("DB_HOST", "localhost")
+DB_NAME = os.getenv("DB_NAME", "kangkung_ai_db")
 DATABASE_URL = f"postgresql://{DB_USER}:{DB_PASSWORD}@{DB_HOST}:5432/{DB_NAME}"
 
 # app/core/database.py
@@ -57,7 +58,7 @@ class Vegetable(Base):
     name = Column(String, nullable=False, unique=True)
     estimated_harvest_time = Column(Interval, nullable=True)
     water_needs = Column(Interval, nullable=True)
-    sunlight_needs = Column(NUMRANGE(), nullable=True)
+    sunlight_needs = Column(String, nullable=True)
     image_url = Column(String, nullable=True)
     instruction = Column(Text, nullable=True)
     user_vegetable_progress = relationship(
@@ -98,8 +99,8 @@ class VegetableModel(BaseModel):
     name: str = Field(..., example="Kangkung")  # `...` means required
     estimated_harvest_time: Optional[timedelta] = Field(None, example="P6W")
     water_needs: Optional[timedelta] = Field(None, example="P2D")
-    sunlight_needs: Optional[Tuple[Optional[int],
-                                   Optional[int]]] = Field(None, example=(6, 8))
+    sunlight_needs: Optional[str] = Field(
+        None, example="6 hours of direct sunlight")
     image_url: Optional[str] = Field(
         None, example="http://example.com/kangkung.jpg")
     instruction: Optional[str] = Field(
@@ -163,17 +164,12 @@ def list_user():
 @app.post("/vegetable-add")
 def add_vegetable(vegetable_data: VegetableModel):
     try:
-        sunlight_range = None
-        if vegetable_data.sunlight_needs:
-            lower, upper = vegetable_data.sunlight_needs
-            # '[]' indicates an inclusive range
-            sunlight_range = NumericRange(lower, upper, '[]')
-
         new_vegetable = Vegetable(
             name=vegetable_data.name,
             estimated_harvest_time=vegetable_data.estimated_harvest_time,
             water_needs=vegetable_data.water_needs,
-            sunlight_needs=sunlight_range,  # Assign the NumericRange object here
+            # Assign the NumericRange object here
+            sunlight_needs=vegetable_data.sunlight_needs,
             image_url=vegetable_data.image_url,
             instruction=vegetable_data.instruction
         )
@@ -296,7 +292,40 @@ def create_user_vegetable_progress_entry(progress_input: UserVegetableProgressMo
         raise HTTPException(
             status_code=500, detail=f"Error getting users Progress: {str(e)}"
         )
-
     return session_progress
-=======
->>>>>>> e03bbe8aaacc028352a498e9db6d7724a0d91f6e
+
+
+@app.patch("/user-vegetable-patch/{progress_id}", response_model=UserVegetableProgressModel)
+def update_user_vegetable_progress_entry(
+    progress_id: int,
+    update_data: UserVegetableProgressModel
+):
+    """
+    Updates an existing User Vegetable Progress entry.
+    Only provided fields will be updated.
+    """
+    db_progress_entry = session.query(UserVegetableProgress).filter(
+        UserVegetableProgress.id == progress_id
+    ).first()
+
+    if not db_progress_entry:
+        raise HTTPException(
+            status_code=500, detail=f"Error updating users Progress: {str(e)}"
+        )
+    update_data_dict = update_data.model_dump(
+        exclude_unset=True)  # For Pydantic V2+
+    for key, value in update_data_dict.items():
+        setattr(db_progress_entry, key, value)
+    try:
+        # Re-add to session to mark as dirty, though merge might be better if dettached
+        session.add(db_progress_entry)
+        session.commit()
+        # Refresh to get latest state from DB, including any triggers/defaults
+        session.refresh(db_progress_entry)
+    except Exception as e:
+        session.rollback()
+        raise HTTPException(
+            status_code=500, detail=f"Error updating  users Progress: {str(e)}"
+        )
+
+    return db_progress_entry
