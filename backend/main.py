@@ -1,1 +1,0 @@
-# Tolong susah sngtt
