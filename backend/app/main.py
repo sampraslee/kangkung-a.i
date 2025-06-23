@@ -20,8 +20,7 @@ app.add_middleware(
 
 # Include routers
 app.include_router(users.router, prefix="/users", tags=["Users"])
-app.include_router(vegetables.router, prefix="/farm",
-                   tags=["Vegetables & Progress"])
+app.include_router(vegetables.router, tags=["Vegetables & Progress"])
 
 
 @app.get("/")
