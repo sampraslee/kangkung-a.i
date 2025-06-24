@@ -1,4 +1,6 @@
-sqlalchemy
-psycopg2
 fastapi
 uvicorn
+sqlalchemy
+psycopg2
+pydantic
+dotenv
