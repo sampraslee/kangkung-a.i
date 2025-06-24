@@ -27,10 +27,12 @@
         size="large"
         class="rounded-lg bg-accent"
       >
-        Sunlight needed: {{ minSunlight }} - {{ maxSunlight }} hours a day
+        Amount of sunlight: {{ amountOfSunlight }}
       </v-chip>
     </v-container>
-    <v-btn class="bg-primary text-white">How to grow</v-btn>
+    <RouterLink :to="`/vegetables/${vegetableId}/instructions`">
+      <v-btn class="bg-primary text-white">How to grow</v-btn>
+    </RouterLink>
   </v-card>
 </template>
 
@@ -39,10 +41,14 @@
 const props = defineProps({
   vegetableImageUrl: {
     type: String,
-    required: true,
+    required: false,
   },
   vegetableName: {
     type: String,
+    required: true,
+  },
+  vegetableId: {
+    type: Number,
     required: true,
   },
   estimatedHarvestTime: {
@@ -53,12 +59,8 @@ const props = defineProps({
     type: Number,
     required: true,
   },
-  minSunlight: {
-    type: Number,
-    required: true,
-  },
-  maxSunlight: {
-    type: Number,
+  amountOfSunlight: {
+    type: String,
     required: true,
   },
 });

@@ -1,52 +1,30 @@
 <template>
-  <v-container v-for="(vegetable, id) in vegetables">
+  <div>
     <VegetableCard
-      :vegetable-image-url="vegetable.vegetableImageURL"
-      :vegetable-name="vegetable.vegetableName"
-      :estimated-harvest-time="vegetable.estimatedHarvestTime"
-      :watering-frequency="vegetable.wateringFrequency"
-      :min-sunlight="vegetable.minSunlight"
-      :max-sunlight="vegetable.maxSunlight"
+      v-for="(vegetable, id) in vegetables"
+      :vegetable-image-url="vegetable.image_url"
+      :vegetable-name="vegetable.name"
+      :vegetable-id="vegetable.id"
+      :estimated-harvest-time="vegetable.estimated_harvest_time"
+      :watering-frequency="vegetable.watering_frequency"
+      :amount-of-sunlight="vegetable.amount_of_sunlight"
     ></VegetableCard>
-  </v-container>
+  </div>
 </template>
 
 <script setup lang="ts">
+import { onMounted } from "vue";
 import VegetableCard from "../components/VegetableCard.vue";
+import { storeToRefs } from "pinia";
+import { useVegetablesStore } from "@/stores/vegetable";
 
-// test data
-const vegetables = [
-  {
-    vegetableImageUrl: "https://placehold.co/600x400.png",
-    vegetableName: "Kangkung (Water Spinach)",
-    estimatedHarvestTime: 4,
-    wateringFrequency: 1,
-    minSunlight: 6,
-    maxSunlight: 8,
-  },
-  {
-    vegetableImageURL: "https://placehold.co/600x400@2x.png",
-    vegetableName: "Bayam (Spinach)",
-    estimatedHarvestTime: 5,
-    wateringFrequency: 2,
-    minSunlight: 5,
-    maxSunlight: 7,
-  },
-  {
-    vegetableImageURL: "https://placehold.co/600x400@2x.png",
-    vegetableName: "Cili Padi (Bird's Eye Chili)",
-    estimatedHarvestTime: 10,
-    wateringFrequency: 1,
-    minSunlight: 7,
-    maxSunlight: 9,
-  },
-  {
-    vegetableImageURL: "https://placehold.co/600x400@2x.png",
-    vegetableName: "Terung (Eggplant)",
-    estimatedHarvestTime: 12,
-    wateringFrequency: 1,
-    minSunlight: 6,
-    maxSunlight: 8,
-  },
-];
+const vegetableStore = useVegetablesStore();
+const { vegetables } = storeToRefs(vegetableStore);
+const { getVegetableById } = storeToRefs(vegetableStore);
+
+onMounted(() => {
+  console.log("on mount");
+  vegetableStore.getVegetables();
+  console.log(vegetableStore.getVegetableById(1));
+});
 </script>
