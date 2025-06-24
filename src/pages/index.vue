@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 <template>
   <v-card class="mx-auto my-4 rounded-lg" max-width="600" elevation="2">
     <v-card-title class="d-flex justify-space-between align-center">
@@ -166,3 +167,5 @@ export default {
   min-width: 25px;
 }
 </style>
+=======
+>>>>>>> 1f52acb6a788d283ea8e3e2cc47f369fa4ead57d
