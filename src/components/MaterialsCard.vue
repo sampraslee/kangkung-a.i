@@ -9,6 +9,7 @@
             <v-card
               v-for="(item, index) in materials"
               :key="index"
+              max-width="600"
               variant="outlined"
               class="material-item"
               :class="{ 'mb-3': index !== materials.length - 1 }"
