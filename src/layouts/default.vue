@@ -2,6 +2,7 @@
   <v-main>
     <v-app-bar color="accent">
       <v-toolbar-title>Kangkung A.I</v-toolbar-title>
+      <v-btn icon="mdi-menu"></v-btn>
     </v-app-bar>
     <router-view />
   </v-main>
