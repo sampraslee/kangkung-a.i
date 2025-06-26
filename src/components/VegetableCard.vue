@@ -30,7 +30,7 @@
         Amount of sunlight: {{ amountOfSunlight }}
       </v-chip>
     </v-container>
-    <RouterLink :to="`/vegetables/${vegetableId}/instructions`">
+    <RouterLink :to="`/vegetablePlantingInfo`">
       <v-btn class="bg-primary text-white">How to grow</v-btn>
     </RouterLink>
   </v-card>
