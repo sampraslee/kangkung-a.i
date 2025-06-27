@@ -1,15 +1,22 @@
 <template>
-  <div>
-    <VegetableCard
-      v-for="(vegetable, id) in vegetables"
-      :vegetable-image-url="vegetable.image_url"
-      :vegetable-name="vegetable.name"
-      :vegetable-id="vegetable.id"
-      :estimated-harvest-time="vegetable.estimated_harvest_time"
-      :watering-frequency="vegetable.watering_frequency"
-      :amount-of-sunlight="vegetable.amount_of_sunlight"
-    ></VegetableCard>
-  </div>
+  <section id="user-greeting">
+    <v-container class="pa-0 mb-4 mt-4">
+      <p>Hello user! What would you like to grow?</p>
+    </v-container>
+  </section>
+  <section id="vegetable-list">
+    <v-container class="pa-0 d-flex flex-column ga-7">
+      <VegetableCard
+        v-for="(vegetable, id) in vegetables"
+        :vegetable-image-url="vegetable.image_url"
+        :vegetable-name="vegetable.name"
+        :vegetable-id="vegetable.id"
+        :estimated-harvest-time="vegetable.estimated_harvest_time"
+        :watering-frequency="vegetable.watering_frequency"
+        :amount-of-sunlight="vegetable.amount_of_sunlight"
+      ></VegetableCard>
+    </v-container>
+  </section>
 </template>
 
 <script setup lang="ts">
