@@ -21,7 +21,7 @@ const kangkungTheme = {
     primary: "#00A550",
     secondary: "#008BA3",
     accent: "#E6F6E7",
-    white: "#FFFFF",
+    white: "#FEFEFA",
     black: "#26221E",
   },
 };

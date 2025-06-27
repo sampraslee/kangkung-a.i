@@ -1,4 +1,15 @@
 @use "vuetify/settings" with (
   $body-font-family: "General Sans",
-  $heading-font-family: "General Sans"
+  $heading-font-family: "General Sans",
+
+  $utilities: (
+    "width": (
+      property: width,
+      responsive: true,
+      class: w,
+      values: (
+        90: 90%,
+      ),
+    ),
+  )
 );
