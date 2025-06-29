@@ -54,7 +54,7 @@
     <VideoCard></VideoCard>
   </section>
 
-  <RouterLink :to="`/calendar`">
+  <RouterLink :to="`/vegetablePlantingChecklist`">
     <CallToActionButton button-text="I want to grow"></CallToActionButton>
   </RouterLink>
 </template>

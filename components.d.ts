@@ -10,11 +10,13 @@ declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     CallToActionButton: typeof import('./src/components/CallToActionButton.vue')['default']
+    ChecklistItemCard: typeof import('./src/components/ChecklistItemCard.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     MaterialsCard: typeof import('./src/components/MaterialsCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     VegetableCard: typeof import('./src/components/VegetableCard.vue')['default']
     VideoCard: typeof import('./src/components/VideoCard.vue')['default']
+    WhereToBuyCard: typeof import('./src/components/WhereToBuyCard.vue')['default']
   }
 }

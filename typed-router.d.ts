@@ -23,6 +23,7 @@ declare module 'vue-router/auto-routes' {
     '/calendarSelected': RouteRecordInfo<'/calendarSelected', '/calendarSelected', Record<never, never>, Record<never, never>>,
     '/testing': RouteRecordInfo<'/testing', '/testing', Record<never, never>, Record<never, never>>,
     '/userLogin': RouteRecordInfo<'/userLogin', '/userLogin', Record<never, never>, Record<never, never>>,
+    '/vegetablePlantingChecklist': RouteRecordInfo<'/vegetablePlantingChecklist', '/vegetablePlantingChecklist', Record<never, never>, Record<never, never>>,
     '/vegetablePlantingInfo': RouteRecordInfo<'/vegetablePlantingInfo', '/vegetablePlantingInfo', Record<never, never>, Record<never, never>>,
     '/vegetableSelect': RouteRecordInfo<'/vegetableSelect', '/vegetableSelect', Record<never, never>, Record<never, never>>,
   }
