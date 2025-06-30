@@ -28,12 +28,13 @@
       </v-chip>
     </v-container>
     <RouterLink :to="`/vegetablePlantingInfo`">
-      <v-btn class="bg-primary text-white">How to grow</v-btn>
+      <CallToActionButton button-text="How to grow"></CallToActionButton>
     </RouterLink>
   </v-card>
 </template>
 
 <script setup lang="ts">
+import CallToActionButton from "../components/CallToActionButton.vue";
 // define the types of data that every card needs to show
 const props = defineProps({
   vegetableImageUrl: {
