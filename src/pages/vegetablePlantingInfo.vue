@@ -3,19 +3,19 @@
 
   <!-- Kangkung Info -->
   <div class="vegetable-info bg-accent pa-4 rounded-lg mb-6">
-    <h3 class="mb-4">Vegetable Name</h3>
+    <h3 class="mb-4">{{ vegetableStore.selectedVegetable.name }}</h3>
     <v-chip
       prepend-icon="mdi-clock-time-four-outline"
       variant="text"
       class="mb-3"
     >
-      Estimated time to harvest:
+      Estimated time to harvest: {{ vegetableStore.selectedVegetable.estimated_harvest_time }}
     </v-chip>
     <v-chip prepend-icon="mdi-water-outline" variant="text" class="mb-3">
-      Watering frequency:
+      Watering frequency: {{ wateringFrequency }}
     </v-chip>
     <v-chip prepend-icon="mdi-weather-sunny" variant="text">
-      Amount of sunlight:
+      Amount of sunlight: {{ amountOfSunlight }}
     </v-chip>
   </div>
   <!-- How to grow -->
@@ -59,8 +59,13 @@
   </RouterLink>
 </template>
 
-<script>
+<script setup lang="ts">
+import { storeToRefs } from "pinia";
+import { useVegetablesStore } from "@/stores/vegetable";
 import MaterialsCard from "../components/MaterialsCard.vue";
 import VideoCard from "../components/VideoCard.vue";
 import CallToActionButton from "../components/CallToActionButton.vue";
+
+const vegetableStore = useVegetablesStore();
+const { vegetableName, estimatedHarvestTime, wateringFrequency, amountOfSunlight } = storeToRefs(vegetableStore);
 </script>
