@@ -92,7 +92,7 @@ const handleLogin = () => {
   // In a real app, you'd send this data to your backend
   setTimeout(() => {
     loading.value = false;
-    router.push("/vegeSelect");
+    router.push("/vegetableSelect");
     // Based on backend response:
     // If successful: router.push('/dashboard');
     // If failed: show error message;
