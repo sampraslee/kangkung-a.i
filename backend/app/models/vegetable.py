@@ -1,6 +1,7 @@
 from sqlalchemy import Column, Integer, String, Text, Interval
 from sqlalchemy.orm import relationship
 from app.core.database import Base
+from app.models.material import material_vegetable_association
 
 
 class Vegetable(Base):
@@ -18,7 +19,10 @@ class Vegetable(Base):
         "UserVegetableProgress", back_populates="vegetable"
     )
     materials = relationship(
-        "Material", back_populates="vegetable", cascade="all, delete-orphan")
+        "Material",
+        secondary=material_vegetable_association,
+        back_populates="vegetables"
+    )
 
     def __repr__(self):
         return f"<Vegetable(id={self.id}, name='{self.name}')>"
