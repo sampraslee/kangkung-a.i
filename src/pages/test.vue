@@ -36,7 +36,9 @@
         </v-col>
         <v-col cols="10">
           <div class="text-subtitle-1">{{ formattedDate }}</div>
-          <div class="text-caption">Start planting {{ vegetableName }}!</div>
+          <div class="text-caption">
+            Start planting {{ currentVegetable.name }}!
+          </div>
         </v-col>
       </v-row>
     </v-container>
@@ -53,7 +55,9 @@
         </v-col>
         <v-col cols="10">
           <div class="text-subtitle-1">{{ formattedHarvestDate }}</div>
-          <div class="text-caption">Estimated {{ vegetableName }} harvest!</div>
+          <div class="text-caption">
+            Estimated {{ currentVegetable.name }} harvest!
+          </div>
         </v-col>
       </v-row>
     </v-container>
@@ -61,13 +65,17 @@
 </template>
 
 <script>
-import { storeToRefs } from "pinia";
-import { useVegetablesStore } from "@/stores/vegetable";
-
-const vegetableStore = useVegetablesStore();
-const { vegetableName, estimatedHarvestTime } = storeToRefs(vegetableStore);
-
 export default {
+  props: {
+    // This will be passed from the parent component
+    selectedVegetable: {
+      type: Object,
+      default: () => ({
+        name: "Kangkung (Water Spinach)",
+        harvestTime: "P6W", // ISO 8601 duration format (6 weeks)
+      }),
+    },
+  },
   data() {
     const today = new Date();
     const currentYear = today.getFullYear();
@@ -86,25 +94,22 @@ export default {
     };
   },
   computed: {
-    // this is where I get the date the user clicked
     formattedDate() {
       if (!this.confirmedDate) return "";
       const day = String(this.confirmedDate.day).padStart(2, "0");
       const month = String(this.confirmedDate.month).padStart(2, "0");
-      const userSelectedDate = Date(`${day}/${month}/${this.confirmedDate.year}`)
-      console.log(typeof(`${day}/${month}/${this.confirmedDate.year}`))
       return `${day}/${month}/${this.confirmedDate.year}`;
     },
-
     formattedHarvestDate() {
       if (!this.confirmedDate) return "";
 
+      // Calculate harvest date (planting date + 6 weeks)
       const harvestDate = new Date(
         this.confirmedDate.year,
         this.confirmedDate.month - 1,
         this.confirmedDate.day
       );
-      harvestDate.setDate(harvestDate.getDate() + estimatedHarvestTime * 7);
+      harvestDate.setDate(harvestDate.getDate() + 42); // 6 weeks = 42 days
 
       // Format as DD/MM/YYYY
       return `${String(harvestDate.getDate()).padStart(2, "0")}/${String(
