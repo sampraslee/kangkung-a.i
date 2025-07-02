@@ -1,10 +1,9 @@
 <template>
-  <!-- Header -->
-
   <v-container
     class="d-flex flex-column justify-center align-center"
     style="height: 100vh"
   >
+    <!-- Header -->
     <h1 class="mb-0 text-center font-weight-bold pa-0">
       When would you like to
     </h1>
@@ -12,65 +11,125 @@
       start planting?
     </h1>
 
+    <!-- Date Picker -->
     <v-row>
       <v-col cols="12">
-        <v-date-picker v-model="selectedDate" landscape :min="minDate">
-          <!-- <template v-slot:header>
-          <div class="d-flex justify-space-between align-center pa-2">
-            <v-btn icon @click="prevMonth">
-              <v-icon>mdi-chevron-left</v-icon>
-            </v-btn>
-            <div class="text-h6">{{ currentMonthYear }}</div>
-            <v-btn icon @click="nextMonth">
-              <v-icon>mdi-chevron-right</v-icon>
-            </v-btn>
-          </div>
-          </template> -->
-        </v-date-picker>
+        <v-date-picker
+          v-model="selectedDate"
+          landscape
+          :min="minDate"
+        ></v-date-picker>
       </v-col>
     </v-row>
+
+    <v-btn color="primary" @click="confirmDate">Confirm Date</v-btn>
+
+    <!-- Planting Date Container -->
+    <v-container
+      v-if="confirmedDate"
+      class="rounded-lg mt-6"
+      style="border: 1px solid black; max-width: 400px"
+    >
+      <v-row align="center">
+        <v-col cols="2" class="d-flex justify-center">
+          <v-icon>mdi-calendar</v-icon>
+        </v-col>
+        <v-col cols="10">
+          <div class="text-subtitle-1">{{ formattedDate }}</div>
+          <div class="text-caption">
+            Start planting {{ currentVegetable.name }}!
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <!-- NEW: Harvest Date Container -->
+    <v-container
+      v-if="confirmedDate"
+      class="rounded-lg mt-4"
+      style="border: 1px solid black; max-width: 400px"
+    >
+      <v-row align="center">
+        <v-col cols="2" class="d-flex justify-center">
+          <v-icon>mdi-sprout</v-icon>
+        </v-col>
+        <v-col cols="10">
+          <div class="text-subtitle-1">{{ formattedHarvestDate }}</div>
+          <div class="text-caption">
+            Estimated {{ currentVegetable.name }} harvest!
+          </div>
+        </v-col>
+      </v-row>
+    </v-container>
   </v-container>
 </template>
 
 <script>
 export default {
+  props: {
+    // This will be passed from the parent component
+    selectedVegetable: {
+      type: Object,
+      default: () => ({
+        name: "Kangkung (Water Spinach)",
+        harvestTime: "P6W", // ISO 8601 duration format (6 weeks)
+      }),
+    },
+  },
   data() {
     const today = new Date();
     const currentYear = today.getFullYear();
     const currentMonth = today.getMonth() + 1;
     const currentDay = today.getDate();
 
-    const formattedMonth = String(currentMonth).padStart(2, "0");
-    const formattedDay = String(currentDay).padStart(2, "0");
-
     return {
       selectedDate: null,
-
-      minDate: `${currentYear}-${formattedMonth}-${formattedDay}`,
+      minDate: `${currentYear}-${String(currentMonth).padStart(
+        2,
+        "0"
+      )}-${String(currentDay).padStart(2, "0")}`,
+      confirmedDate: null,
+      // Use the prop or fallback to placeholder
+      currentVegetable: this.selectedVegetable,
     };
-    // },
-    // computed: {
-    //   currentMonthYear() {
-    //     const date = new Date(this.date);
-    //     const options = { month: "long", year: "numeric" };
-    //     return date.toLocaleDateString(undefined, options);
-    //   },
-    // },
-    // methods: {
-    //   updateDisplayDate() {
-    //     const [year, month, day] = this.date.split("-");
-    //     this.formattedDate = `${day}/${month}/${year}`;
-    //   },
-    //   prevMonth() {
-    //     const date = new Date(this.date);
-    //     date.setMonth(date.getMonth() - 1);
-    //     this.date = date.toISOString().substr(0, 10);
-    //   },
-    //   nextMonth() {
-    //     const date = new Date(this.date);
-    //     date.setMonth(date.getMonth() + 1);
-    //     this.date = date.toISOString().substr(0, 10);
-    //   },
+  },
+  computed: {
+    formattedDate() {
+      if (!this.confirmedDate) return "";
+      const day = String(this.confirmedDate.day).padStart(2, "0");
+      const month = String(this.confirmedDate.month).padStart(2, "0");
+      return `${day}/${month}/${this.confirmedDate.year}`;
+    },
+    formattedHarvestDate() {
+      if (!this.confirmedDate) return "";
+
+      // Calculate harvest date (planting date + 6 weeks)
+      const harvestDate = new Date(
+        this.confirmedDate.year,
+        this.confirmedDate.month - 1,
+        this.confirmedDate.day
+      );
+      harvestDate.setDate(harvestDate.getDate() + 42); // 6 weeks = 42 days
+
+      // Format as DD/MM/YYYY
+      return `${String(harvestDate.getDate()).padStart(2, "0")}/${String(
+        harvestDate.getMonth() + 1
+      ).padStart(2, "0")}/${harvestDate.getFullYear()}`;
+    },
+  },
+  methods: {
+    confirmDate() {
+      if (this.selectedDate) {
+        const date = new Date(this.selectedDate);
+        this.confirmedDate = {
+          day: date.getDate(),
+          month: date.getMonth() + 1,
+          year: date.getFullYear(),
+        };
+      } else {
+        alert("Please select a date first.");
+      }
+    },
   },
 };
 </script>
