@@ -16,6 +16,10 @@
       <v-col cols="12">
         <v-date-picker
           v-model="selectedDate"
+          header-color="primary"
+          bg-color="accent"
+          color="secondary"
+          border="sm"
           landscape
           :min="minDate"
         ></v-date-picker>
@@ -91,8 +95,10 @@ export default {
       if (!this.confirmedDate) return "";
       const day = String(this.confirmedDate.day).padStart(2, "0");
       const month = String(this.confirmedDate.month).padStart(2, "0");
-      const userSelectedDate = Date(`${day}/${month}/${this.confirmedDate.year}`)
-      console.log(typeof(`${day}/${month}/${this.confirmedDate.year}`))
+      const userSelectedDate = Date(
+        `${day}/${month}/${this.confirmedDate.year}`
+      );
+      console.log(typeof `${day}/${month}/${this.confirmedDate.year}`);
       return `${day}/${month}/${this.confirmedDate.year}`;
     },
 
