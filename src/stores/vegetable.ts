@@ -4,18 +4,12 @@ import { defineStore } from "pinia";
 export const useVegetablesStore = defineStore("vegetable", {
   state: () => ({
     vegetables: [],
-    materials:[],
+    materials: [],
     selectedVegetable: null,
     selectedMaterial: null,
   }),
 
   getters: {
-    // Get a vegetable by its ID
-    getVegetableById: (state: any) => {
-      return (vegetableID: number | string) =>
-        state.vegetables.find((vegetable: any) => vegetable.id === vegetableID);
-    },
-
     // Get the currently selected vegetable
     getVegetableDetails: (state: any) => {
       return state.selectedVegetable;
@@ -24,17 +18,19 @@ export const useVegetablesStore = defineStore("vegetable", {
     // Get all materials associated with a vegetableID
     getMaterialDetails: (state: any) => {
       return (vegetableID: number | string) =>
-        state.materials.filter((material: any) =>
-          Array.isArray(material.vegetables) &&
-          material.vegetables.some((veg: any) => veg.id === vegetableID)
+        state.materials.filter(
+          (material: any) =>
+            Array.isArray(material.vegetables) &&
+            material.vegetables.some((veg: any) => veg.id === vegetableID)
         );
     },
 
     // Get unique materials for a vegetableID (no duplicates)
-    getUniqueMaterialsForVegetable: (state: any) => (vegetableID: number | string) => {
-      const materials = state.materials.filter((material: any) =>
-        Array.isArray(material.vegetables) &&
-        material.vegetables.some((veg: any) => veg.id === vegetableID)
+    getUniqueMaterialsForVegetable: (state: any) => (vegetableID: number) => {
+      const materials = state.materials.filter(
+        (material: any) =>
+          Array.isArray(material.vegetables) &&
+          material.vegetables.some((veg: any) => veg.id === vegetableID)
       );
       const seen = new Set();
       return materials.filter((material: any) => {
@@ -42,7 +38,7 @@ export const useVegetablesStore = defineStore("vegetable", {
         seen.add(material.id);
         return true;
       });
-    }
+    },
   },
 
   actions: {
@@ -61,7 +57,7 @@ export const useVegetablesStore = defineStore("vegetable", {
 
     // Fetch all materials
     async getMaterials() {
-      const url = "http://127.0.0.1:8000/materials/materials";
+      const url = "http://127.0.0.1:8000/materials";
 
       try {
         const response = await axios.get(url);
@@ -86,7 +82,7 @@ export const useVegetablesStore = defineStore("vegetable", {
 
     // Select a material by vegetableID and fetch its details
     async selectMaterial(materialId: number | string) {
-      const url = `http://127.0.0.1:8000/materials/materials/${materialId}`;
+      const url = `http://127.0.0.1:8000/materials/${materialId}`;
       try {
         const response = await axios.get(url);
         this.selectedMaterial = response.data;
@@ -94,6 +90,6 @@ export const useVegetablesStore = defineStore("vegetable", {
       } catch (error: any) {
         console.log(error.message);
       }
-    }
-  }
+    },
+  },
 });

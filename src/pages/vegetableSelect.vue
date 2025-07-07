@@ -27,11 +27,9 @@ import { useVegetablesStore } from "@/stores/vegetable";
 
 const vegetableStore = useVegetablesStore();
 const { vegetables } = storeToRefs(vegetableStore);
-const { getVegetableById } = storeToRefs(vegetableStore);
 
 onMounted(() => {
   console.log("on mount");
   vegetableStore.getVegetables();
-  console.log(vegetableStore.getVegetableById(1));
 });
 </script>
