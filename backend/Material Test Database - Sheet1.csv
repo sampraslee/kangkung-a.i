@@ -1,0 +1,37 @@
+Name,Image,Type,Vegetable ID
+"Loamy, moist Soil",,soil,1
+Vermicompost ,,fertiliser,1
+Neem oil,,pesticide,"1,2,5,7,12,13,17"
+Trowel,,tools,"1,2,3,4,10,11,16"
+Cocopeat soil,,soil,2
+Chicken manure pellet,,fertiliser,"2,3"
+Loamy soil,,soil,"3,7"
+BT (Bacillus thuringiensis),,pesticide,3
+Sandy loam soil,,soil,4
+Phosphorus-rich (5:10:10),,fertiliser,4
+Pyrethrin,,pesticide,4
+Well-draining soil,,soil,"5,12,13,17"
+High potassium (5:10:15),,fertiliser,5
+Pruner,,tools,"5,6,9,12,13,14,15,17"
+"Rich, well-draining soil",,soil,6
+Balanced NPK (10:10:10),,fertiliser,6
+Copper spray,,pesticide,6
+Stakes,,tools,6
+Nitrogen-rich,,fertiliser,"7,11,14"
+Trellis,,tools,"7,8"
+Fertile soil,,soil,8
+Balanced NPK,,fertiliser,"8,17"
+Sulfur spray,,pesticide,8
+"Moist, rich soil",,soil,"9,15"
+Organic compost,,fertiliser,"9,15"
+Manual removal,,pesticide,9
+"Loose, well-draining, slightly acidic soil",,soil,10
+Potassium-rich,,fertiliser,10
+Minimal,,pesticide,"10,16"
+Sandy soil,,soil,11
+Rarely needed,,pesticide,"11,15"
+Citrus fertilizer,,fertiliser,12
+Citrus NPK,,fertiliser,13
+Soap spray,,pesticide,14
+Loosen soil,,soil,16
+Organic matter,,fertiliser,16
