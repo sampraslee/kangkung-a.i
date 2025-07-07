@@ -11,8 +11,8 @@
         :vegetable-image-url="vegetable.image_url"
         :vegetable-name="vegetable.name"
         :vegetable-id="vegetable.id"
-        :estimated-harvest-time="vegetable.estimated_harvest_time"
-        :watering-frequency="vegetable.watering_frequency"
+        :estimated-harvest-time="vegetable.estimated_harvest_time_formatted"
+        :watering-frequency="vegetable.watering_frequency_formatted"
         :amount-of-sunlight="vegetable.amount_of_sunlight"
       ></VegetableCard>
     </v-container>
