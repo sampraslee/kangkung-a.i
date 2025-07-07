@@ -23,8 +23,7 @@
       <v-list-item class="pa-0">2. Fill with nutrient-rich, moist soil or compost.</v-list-item>
       <v-list-item class="pa-0">3. Sow seeds or plant cuttings about 1-2 inches deep.</v-list-item>
       <v-list-item class="pa-0">4. Keep the soil consistently moist, but not waterlogged.</v-list-item>
-      <v-list-item class="pa-0">5. Place in an area receiving full sunlight (at least 6 hours
-        daily).</v-list-item>
+      <v-list-item class="pa-0">5. Place in an area receiving full sunlight (at least 6 hours daily).</v-list-item>
       <v-list-item class="pa-0">6. Sow seeds or plant cuttings about 1-2 inches deep.</v-list-item>
     </v-list>
   </section>
@@ -32,13 +31,19 @@
   <!-- What you'll need -->
   <section id="materials-needed" class="mb-6">
     <h3 class="mb-4">What you'll need</h3>
-    <MaterialsCard></MaterialsCard>
+    <MaterialsCard 
+      v-for="material in uniqueMaterials" 
+      :key="material.id"
+      :materialImageUrl="material.image || 'https://placehold.co/40@3x.png'" 
+      :materialName="material.name"
+      :materialDescription="material.type">
+     </MaterialsCard>
   </section>
 
   <!-- Videos for you  -->
   <section id="relevant-videos" class="mb-6">
     <h3 class="mb-6">Videos for you</h3>
-      <VideoCard></VideoCard>
+    <VideoCard></VideoCard>
   </section>
 
   <RouterLink :to="`/vegetablePlantingChecklist`">
@@ -48,11 +53,26 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
+import { computed, onMounted } from "vue";
 import { useVegetablesStore } from "@/stores/vegetable";
 import MaterialsCard from "../components/MaterialsCard.vue";
 import VideoCard from "../components/VideoCard.vue";
 import CallToActionButton from "../components/CallToActionButton.vue";
 
 const vegetableStore = useVegetablesStore();
-const { imageUrl, vegetableName, estimatedHarvestTime, wateringFrequency, amountOfSunlight } = storeToRefs(vegetableStore);
+
+onMounted(async () => {
+  if (!vegetableStore.materials.length) {
+    await vegetableStore.getMaterials();
+  }
+});
+
+const selectedVegetableId = computed(() => 
+  vegetableStore.selectedVegetable?.id);
+  
+const uniqueMaterials = computed(() =>
+  selectedVegetableId.value
+    ? vegetableStore.getUniqueMaterialsForVegetable(selectedVegetableId.value)
+    : []
+);
 </script>

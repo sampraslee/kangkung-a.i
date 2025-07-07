@@ -43,7 +43,6 @@ const props = defineProps({
 });
 
 function handleHowToGrowClick() {
-  // Only save the vegetableId in the selectedVegetable state
   vegetableStore.selectVegetable(props.vegetableId);
 }
 </script>

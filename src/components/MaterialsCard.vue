@@ -1,5 +1,5 @@
 <template>
-  <v-card class="d-flex ga-4 pa-4 rounded-lg">
+  <v-card class="d-flex ga-4 pa-4 rounded-lg mb-4">
     <img :src="materialImageUrl" class="material-img" />
     <div class="material-info">
       <v-card-title class="pa-0">{{ materialName }}</v-card-title>
@@ -18,11 +18,11 @@ const props = defineProps({
   },
   materialName: {
     type: String,
-    default: "Material Name",
+    required: true,
   },
   materialDescription: {
     type: String,
-    default: "This is the description of the material",
+    required: true,
   },
 });
 </script>
