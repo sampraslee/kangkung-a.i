@@ -10,6 +10,7 @@ import "vuetify/styles";
 
 // Composables
 import { createVuetify } from "vuetify";
+import { VFileUpload } from "vuetify/labs/VFileUpload";
 
 // https://vuetifyjs.com/en/introduction/why-vuetify/#feature-guides
 // creating our custom theme
@@ -31,5 +32,8 @@ export default createVuetify({
     themes: {
       kangkungTheme,
     },
+  },
+  components: {
+    VFileUpload,
   },
 });

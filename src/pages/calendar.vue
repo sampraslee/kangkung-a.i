@@ -1,158 +1,82 @@
 <template>
-  <v-container
-    class="d-flex flex-column justify-center align-center"
-    style="height: 100vh"
-  >
-    <!-- Header -->
-    <h1 class="mb-0 text-center font-weight-bold pa-0">
+  <v-container class="pa-0">
+    <h1 class="text-center mb-5">
       When would you like to
+      <span class="text-primary">start planting</span>
     </h1>
-    <h1 class="mb-8 text-center font-weight-bold pa-0 text-primary">
-      start planting?
-    </h1>
+    <v-date-picker
+      header-color="primary"
+      bg-color="accent"
+      color="secondary"
+      border="sm"
+      rounded="lg"
+      width="100%"
+      v-model="selectedDate"
+    ></v-date-picker>
+    <CallToActionButton
+      button-text="Select Date"
+      class="mt-3"
+      @click="logSelectedDate"
+    ></CallToActionButton>
+  </v-container>
 
-    <!-- Calendar -->
-    <v-row>
-      <v-col cols="12">
-        <v-date-picker
-          v-model="selectedDate"
-          header-color="primary"
-          bg-color="accent"
-          color="secondary"
-          border="sm"
-          landscape
-          :min="minDate"
-        ></v-date-picker>
-      </v-col>
-    </v-row>
+  <v-container class="pa-0 mt-5" v-if="!selectedDate">
+    <p>
+      Select a date and we will show you a timeline of your future planting
+      journey.
+    </p>
+  </v-container>
 
-    <!-- Confirm Button -->
-    <v-btn color="primary" @click="confirmDate">Confirm Date</v-btn>
-
-    <!-- Only appear after date confirmation -->
-    <!-- Start Plant Container -->
-    <v-container
-      v-if="confirmedDate"
-      class="rounded-lg mt-6"
-      style="border: 1px solid black; max-width: 400px"
+  <v-container class="pa-0 mt-5" v-else>
+    <h2>Important Dates</h2>
+    <v-timeline
+      align="start"
+      direction="vertical"
+      dot-color="primary"
+      side="end"
+      truncate-line="both"
     >
-      <v-row align="center">
-        <v-col cols="2" class="d-flex justify-center">
-          <v-icon>mdi-calendar</v-icon>
-        </v-col>
-
-        <v-col cols="10">
-          <div class="text-subtitle-1">{{ formattedDate }}</div>
-          <div class="text-caption">Start planting!</div>
-        </v-col>
-      </v-row>
-    </v-container>
-
-    <!-- Harvest Date Container -->
-    <v-container
-      v-if="confirmedDate && estimatedHarvestTime"
-      class="rounded-lg mt-6"
-      style="border: 1px solid green; max-width: 400px"
-    >
-      <v-row align="center">
-        <v-col cols="2" class="d-flex justify-center">
-          <v-icon color="green">mdi-sprout</v-icon>
-        </v-col>
-
-        <v-col cols="10">
-          <div class="text-subtitle-1">{{ expectedHarvestDate }}</div>
-          <div class="text-caption">Estimated {{ vegetableName }} harvest!</div>
-        </v-col>
-      </v-row>
-    </v-container>
+      <v-timeline-item v-if="selectedDate">
+        <v-sheet border="sm" color="accent" rounded="lg" class="pa-2">
+          <p class="font-weight-bold">
+            {{ selectedDate.toDateString() }}
+          </p>
+          <p>Start planting</p>
+        </v-sheet>
+      </v-timeline-item>
+      <v-timeline-item v-if="calculateEstimatedHarvestDate">
+        <v-sheet border="sm" color="accent" rounded="lg" class="pa-2">
+          <p class="font-weight-bold">
+            {{ calculateEstimatedHarvestDate.toDateString() }}
+          </p>
+          <p>Ready to harvest!</p>
+        </v-sheet>
+      </v-timeline-item>
+    </v-timeline>
   </v-container>
 </template>
 
-<script>
+<script setup lang="ts">
+import CallToActionButton from "../components/CallToActionButton.vue";
 import { useVegetablesStore } from "@/stores/vegetable";
-const vegetableStore = useVegetablesStore(); //compulsory to call specific store
+import { ref, computed } from "vue";
 
-export default {
-  //export to pinia.store
-  data() {
-    //get current date from date picker, this is used to grey out before date.
-    const today = new Date(); //represents the current date that's by default the present
-    const currentYear = today.getFullYear(); //extracts the year/month/day from constant "today"
-    const currentMonth = today.getMonth() + 1; //+1 because months are 0-indexed
-    const currentDay = today.getDate();
+const vegetableStore = useVegetablesStore();
+const selectedVegetable = vegetableStore.selectedVegetable;
+const selectedDate = ref(null);
 
-    //this line of code is used to grey out the date before present
-    const formattedMonth = String(currentMonth).padStart(2, "0"); //converts the month/day number to string
-    const formattedDay = String(currentDay).padStart(2, "0");
+const calculateEstimatedHarvestDate = computed(() => {
+  const estimatedHarvestDate = new Date(selectedDate.value);
+  estimatedHarvestDate.setSeconds(
+    selectedDate.value.getSeconds() +
+      selectedVegetable.estimated_harvest_time_in_seconds
+  );
+  return estimatedHarvestDate;
+});
 
-    return {
-      selectedDate: null, //initially no date is selected //"selectedDate is the date value of user's picked date"
-      confirmedDate: null, //initially no date is confirmed
-      minDate: `${currentYear}-${formattedMonth}-${formattedDay}`, //grey out the date before present
-    };
-  },
-  computed: {
-    // Access the vegetable store and extract selectedVegetable
-    selectedVegetable() {
-      const vegetableStore = useVegetablesStore();
-      return vegetableStore.selectedVegetable;
-    },
-    vegetableName() {
-      //define constant
-      return this.selectedVegetable?.name || "";
-    },
-    estimatedHarvestTime() {
-      //define constant
-      return this.selectedVegetable?.estimated_harvest_time || "";
-    },
-
-    formattedDate() {
-      if (!this.confirmedDate) return "";
-      const day = String(this.confirmedDate.day).padStart(2, "0");
-      const month = String(this.confirmedDate.month).padStart(2, "0");
-      const userSelectedDate = Date(
-        `${day}/${month}/${this.confirmedDate.year}`
-      );
-      console.log(typeof `${day}/${month}/${this.confirmedDate.year}`);
-      return `${day}/${month}/${this.confirmedDate.year}`;
-    },
-
-    formattedHarvestDate() {
-      if (!this.confirmedDate) return "";
-
-      const daysToAdd =
-        parseInt(this.estimatedHarvestTime.replace(/\D/g, "")) || 0; //converts religion
-
-      const plantingDate = new Date(
-        this.confirmedDate.year,
-        this.confirmedDate.month - 1,
-        this.confirmedDate.day
-      );
-
-      plantingDate.setDate(plantingDate.getDate() + daysToAdd);
-
-      const harvestDay = String(plantingDate.getDate()).padStart(2, "0");
-      const harvestMonth = String(plantingDate.getMonth() + 1).padStart(2, "0"); //+1 because months are 0-indexed
-      const harvestYear = plantingDate.getFullYear();
-
-      return `${harvestDay}/${harvestMonth}/${harvestYear}`;
-    },
-  },
-  methods: {
-    // is triggered when button confirm date is clicked
-    confirmDate() {
-      if (this.selectedDate) {
-        const date = new Date(this.selectedDate); //converts selected date into a JavaScript Date object
-        this.confirmedDate = {
-          day: date.getDate(),
-          month: date.getMonth() + 1,
-          year: date.getFullYear(),
-        };
-      } else {
-        // user hasn't selected a date
-        alert("Please select a date first.");
-      }
-    },
-  },
-};
+function logSelectedDate() {
+  console.log(selectedDate.value.toDateString());
+  console.log(calculateEstimatedHarvestDate.value);
+  console.log(selectedVegetable.estimated_harvest_time);
+}
 </script>
