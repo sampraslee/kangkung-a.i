@@ -69,7 +69,7 @@ export const useVegetablesStore = defineStore("vegetable", {
     },
 
     // Select a vegetable by ID and fetch its details
-    async selectVegetable(vegetableId: number | string) {
+    async getSelectedVegetable(vegetableId: number | string) {
       const url = `http://127.0.0.1:8000/vegetables/${vegetableId}`;
       try {
         const response = await axios.get(url);
