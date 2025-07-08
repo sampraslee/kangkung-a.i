@@ -1,6 +1,6 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from app.api.routers import users, vegetables, materials
+from app.api.routers import users, vegetables, materials, AItool
 from app.core.database import create_db_and_tables
 
 # This line is for development, it creates the tables if they don't exist.
@@ -22,6 +22,7 @@ app.add_middleware(
 app.include_router(users.router, prefix="/users", tags=["Users"])
 app.include_router(vegetables.router, tags=["Vegetables & Progress"])
 app.include_router(materials.router, prefix="/materials", tags=["Materials"])
+app.include_router(AItool.router, prefix="/AItool", tags=["AI Tools"])
 
 
 @app.get("/")

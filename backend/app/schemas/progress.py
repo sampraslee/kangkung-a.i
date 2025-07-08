@@ -4,7 +4,7 @@ from datetime import datetime, date
 
 
 class ProgressBase(BaseModel):
-    vegeNickname: Optional[str] = Field(None, example="My Special Kangkung")
+    vegeNickname: Optional[str] = Field(None)
     lastWatered: Optional[datetime] = Field(None)
     lastFertilized: Optional[datetime] = Field(None)
     lastCheckup: Optional[date] = Field(None)
