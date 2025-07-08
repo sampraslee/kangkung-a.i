@@ -12,6 +12,7 @@
       rounded="lg"
       width="100%"
       v-model="selectedDate"
+      :min="currentDate"
     ></v-date-picker>
     <CallToActionButton
       button-text="Select Date"
@@ -63,6 +64,8 @@ import { ref, computed } from "vue";
 
 const vegetableStore = useVegetablesStore();
 const selectedVegetable = vegetableStore.selectedVegetable;
+const currentDate = new Date();
+currentDate.setDate(currentDate.getDate() - 1); //grey-out
 const selectedDate = ref(null);
 
 const calculateEstimatedHarvestDate = computed(() => {

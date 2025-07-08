@@ -5,13 +5,14 @@
   <div class="vegetable-info bg-accent pa-4 rounded-lg mb-6">
     <h3 class="mb-4">{{ vegetableStore.selectedVegetable.name }}</h3>
     <v-chip prepend-icon="mdi-clock-time-four-outline" variant="text" class="mb-3">
-      Estimated time to harvest: {{ vegetableStore.selectedVegetable.estimated_harvest_time }}
+      Estimated time to harvest: <span :style="{ marginLeft: '4px',fontWeight: 600 }"v-html="vegetableStore.selectedVegetable.estimated_harvest_time_formatted"></span>
     </v-chip>
     <v-chip prepend-icon="mdi-water-outline" variant="text" class="mb-3">
-      Watering frequency: {{ vegetableStore.selectedVegetable.watering_frequency }}
+      Watering frequency: <span :style="{ marginLeft: '4px',fontWeight: 600 }"v-html="vegetableStore.selectedVegetable.watering_frequency_formatted"></span>
+
     </v-chip>
     <v-chip prepend-icon="mdi-weather-sunny" variant="text">
-      Amount of sunlight: {{ vegetableStore.selectedVegetable.amount_of_sunlight }}
+      Amount of sunlight: <span :style="{ marginLeft: '4px',fontWeight: 600 }"v-html="vegetableStore.selectedVegetable.amount_of_sunlight"></span>
     </v-chip>
   </div>
 

@@ -1,7 +1,6 @@
 from pydantic import BaseModel, Field, computed_field
 from typing import Optional, List
 from datetime import timedelta
-import humanize
 
 from app.schemas.minimals import MaterialMinimal, VegetableMinimal
 
@@ -21,16 +20,22 @@ class VegetableBase(BaseModel):
 
     @computed_field
     def estimated_harvest_time_formatted(self) -> str:
-        return humanize.naturaldelta(self.estimated_harvest_time, months=True)
+        if self.estimated_harvest_time:
+            days = self.estimated_harvest_time.days
+            return f"{days} Days"
 
-    @computed_field
     def estimated_harvest_time_in_seconds(self) -> int:
         return self.estimated_harvest_time.total_seconds()
 
     @computed_field
-    def watering_frequency_formatted(self) -> str:
-        return humanize.naturaldelta(self.watering_frequency)
-
+    def watering_frequency_formatted(self) -> Optional[str]:
+        if self.watering_frequency is None:
+            return None
+        days = self.watering_frequency.days
+        if days == 1:
+            return "Daily"
+        else:
+            return f"Every {days} days"
 
 class VegetableCreate(VegetableBase):
     material_ids: Optional[List[int]] = Field(
