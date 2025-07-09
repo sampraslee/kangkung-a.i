@@ -17,6 +17,7 @@ class MaterialBase(BaseModel):
     name: str = Field(..., example="Premium Potting Mix")
     type: MaterialType
     image: Optional[str] = Field(None, example="http://example.com/soil.jpg")
+    description: str
 
 
 class MaterialCreate(MaterialBase):

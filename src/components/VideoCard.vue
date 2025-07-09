@@ -20,11 +20,11 @@ const props = defineProps({
   },
   videoTitle: {
     type: String,
-    default: "Video Title XXX",
+    default: "Beginners guide to growing your vegetable",
   },
   videoSummary: {
     type: String,
-    default: "This is an A.I generated summary of the video.",
+    default: "Here's a quick guide to getting started with growing your vegetable.",
   },
   videoLink: {
     type: String,

@@ -14,6 +14,7 @@ export const useProgressStore = defineStore("progress", {
         const response = await axios.get(url);
         console.log(response.data);
         this.timeline = response.data;
+        console.log("timeline from pinia");
         console.log(this.timeline);
       } catch (error: any) {
         console.log(error.message);

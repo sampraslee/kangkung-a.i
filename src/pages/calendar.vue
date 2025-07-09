@@ -91,8 +91,9 @@ function logSelectedDate() {
   console.log(selectedVegetable.estimated_harvest_time);
 }
 
-function getPlantingTimeline() {
-  progressStore.getPlantingTimeline();
+async function getPlantingTimeline() {
+  await progressStore.getPlantingTimeline();
+  console.log("Timeline");
   console.log(timeline);
 }
 </script>

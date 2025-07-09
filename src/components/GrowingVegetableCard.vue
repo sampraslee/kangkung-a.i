@@ -29,7 +29,7 @@
       </v-chip>
     </v-container>
 
-    <RouterLink :to="`/checkupChatbot/`">
+    <RouterLink :to="`/userVegetableImageUpload/`">
       <CallToActionButton button-text="Get a checkup"></CallToActionButton>
     </RouterLink>
   </v-card>

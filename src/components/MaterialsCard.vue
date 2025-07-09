@@ -1,6 +1,6 @@
 <template>
   <v-card class="d-flex ga-4 pa-4 rounded-lg mb-4">
-    <img :src="materialImageUrl" class="material-img" />
+    <v-img :src="materialImageUrl" :width="100" :height="100" aspect-ratio="1" class="material-img flex-shrink-0" cover />
     <div class="material-info">
       <v-card-title class="pa-0">{{ materialName }}</v-card-title>
       <v-card-text class="pa-0">
