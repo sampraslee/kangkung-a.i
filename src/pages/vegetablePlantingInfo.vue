@@ -68,7 +68,7 @@
   </section>
 
   <RouterLink :to="`/vegetablePlantingChecklist`">
-    <CallToActionButton button-text="I want to grow"></CallToActionButton>
+    <CallToActionButton button-text="I want to grow" class="mb-6"></CallToActionButton>
   </RouterLink>
 </template>
 
