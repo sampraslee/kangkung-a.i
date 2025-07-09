@@ -1,10 +1,13 @@
 # app/api/routers/timelines.py
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, File, UploadFile, HTTPException, Form, Depends
 from sqlalchemy.orm import Session
 from app.api import deps
 from app import crud
+from typing import Dict, Optional
 # Import the Pydantic model too
 from app.services.timeline_service import generate_care_timeline, CareTimeline, convert_periods_to_dates
+from app.services.image_analysis_service import analyze_vegetable_image_and_advise
+
 
 router = APIRouter()
 
@@ -60,3 +63,33 @@ def get_timeline_dates(progress_id: int, db: Session = Depends(deps.get_db)):
     )
 
     return timeline_events
+
+
+# This means the full path will be /image-analysis/
+@router.post("/image_analysis")
+async def analyze_image_endpoint(
+    file: UploadFile = File(...),
+    question: Optional[str] = Form(None)
+) -> str:
+    """
+    Analyzes an uploaded image of a vegetable plant and provides care advice.
+    Optionally accepts a specific question from the user.
+    """
+    if file.content_type not in ["image/jpeg", "image/png"]:
+        raise HTTPException(
+            400, detail="Invalid file type. Only JPEG and PNG are allowed.")
+
+    if file.size is not None and file.size > 10_000_000:
+        raise HTTPException(
+            400, detail="File too large. Maximum size is 10MB.")
+
+    try:
+        contents = await file.read()
+        analysis_result = await analyze_vegetable_image_and_advise(
+            image_content=contents,
+            question=question
+        )
+        return analysis_result["analysis"]
+    except Exception as e:
+        raise HTTPException(
+            500, detail=f"An error occurred while processing the image: {str(e)}")
