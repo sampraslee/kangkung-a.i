@@ -1,37 +1,37 @@
-Name,Image,Type,Vegetable ID
-"Loamy, moist Soil",,soil,1
-Vermicompost ,,fertiliser,1
-Neem oil,,pesticide,"1,2,5,7,12,13,17"
-Trowel,,tools,"1,2,3,4,10,11,16"
-Cocopeat soil,,soil,2
-Chicken manure pellet,,fertiliser,"2,3"
-Loamy soil,,soil,"3,7"
-BT (Bacillus thuringiensis),,pesticide,3
-Sandy loam soil,,soil,4
-Phosphorus-rich (5:10:10),,fertiliser,4
-Pyrethrin,,pesticide,4
-Well-draining soil,,soil,"5,12,13,17"
-High potassium (5:10:15),,fertiliser,5
-Pruner,,tools,"5,6,9,12,13,14,15,17"
-"Rich, well-draining soil",,soil,6
-Balanced NPK (10:10:10),,fertiliser,6
-Copper spray,,pesticide,6
-Stakes,,tools,6
-Nitrogen-rich,,fertiliser,"7,11,14"
-Trellis,,tools,"7,8"
-Fertile soil,,soil,8
-Balanced NPK,,fertiliser,"8,17"
-Sulfur spray,,pesticide,8
-"Moist, rich soil",,soil,"9,15"
-Organic compost,,fertiliser,"9,15"
-Manual removal,,pesticide,9
-"Loose, well-draining, slightly acidic soil",,soil,10
-Potassium-rich,,fertiliser,10
-Minimal,,pesticide,"10,16"
-Sandy soil,,soil,11
-Rarely needed,,pesticide,"11,15"
-Citrus fertilizer,,fertiliser,12
-Citrus NPK,,fertiliser,13
-Soap spray,,pesticide,14
-Loosen soil,,soil,16
-Organic matter,,fertiliser,16
+Name,Image,Type,Vegetable ID,Description
+"Loamy, moist Soil",/public/images/materials/soil.png,soil,1,"Ideal for most plants, providing good drainage and water retention."
+Vermicompost ,/public/images/materials/fertiliser.png,fertiliser,1,"Nutrient-rich fertilizer from worm castings, enhancing soil structure and fertility."
+Neem oil,/public/images/materials/pesticide.png,pesticide,"1,2,5,7,12,13,17","Natural pesticide and fungicide, effective against various garden pests and diseases."
+Trowel,/public/images/materials/tools.png,tools,"1,2,3,4,10,11,16","Small hand tool used for digging, planting, and transplanting in gardens."
+Cocopeat soil,/public/images/materials/soil.png,soil,2,"Sustainable growing medium made from coconut husks, excellent for water retention."
+Chicken manure pellet,/public/images/materials/fertiliser.png,fertiliser,"2,3","Slow-release organic fertilizer, enriching soil with essential plant nutrients."
+Loamy soil,/public/images/materials/soil.png,soil,"3,7","Balanced soil type with good aeration, drainage, and nutrient-holding capacity."
+BT (Bacillus thuringiensis),/public/images/materials/pesticide.png,pesticide,3,"Biological pesticide targeting specific insect larvae, safe for beneficials."
+Sandy loam soil,/public/images/materials/soil.png,soil,4,"Drains well and warms quickly, suitable for root vegetables and some flowers."
+Phosphorus-rich (5:10:10),/public/images/materials/fertiliser.png,fertiliser,4,Fertilizer promoting strong root development and abundant flowering.
+Pyrethrin,/public/images/materials/pesticide.png,pesticide,4,"Natural insecticide from chrysanthemum flowers, acts quickly on pests."
+Well-draining soil,/public/images/materials/soil.png,soil,"5,12,13,17","Essential for preventing root rot, allowing excess water to escape easily."
+High potassium (5:10:15),/public/images/materials/fertiliser.png,fertiliser,5,"Fertilizer enhancing fruit development, disease resistance, and overall plant vigor."
+Pruner,/public/images/materials/tools.png,tools,"5,6,9,12,13,14,15,17","Handheld tool for cutting branches and stems, promoting plant health and shape."
+"Rich, well-draining soil",/public/images/materials/soil.png,soil,6,Optimal soil providing ample nutrients and preventing waterlogging.
+Balanced NPK (10:10:10),/public/images/materials/fertiliser.png,fertiliser,6,"All-purpose fertilizer providing equal parts nitrogen, phosphorus, and potassium."
+Copper spray,/public/images/materials/pesticide.png,pesticide,6,"Fungicide and bactericide, effective against various plant diseases."
+Stakes,/public/images/materials/tools.png,tools,6,"Supports for plants, preventing breakage and encouraging upright growth."
+Nitrogen-rich,/public/images/materials/fertiliser.png,fertiliser,"7,11,14","Fertilizer promoting lush, green leafy growth in plants."
+Trellis,/public/images/materials/tools.png,tools,"7,8","Structure supporting climbing plants, maximizing space and air circulation."
+Fertile soil,/public/images/materials/soil.png,soil,8,"Soil abundant in nutrients, promoting vigorous and healthy plant growth."
+Balanced NPK,/public/images/materials/fertiliser.png,fertiliser,"8,17","Fertilizer with equal proportions of nitrogen, phosphorus, and potassium for general plant health."
+Sulfur spray,/public/images/materials/pesticide.png,pesticide,8,"Fungicide and miticide, also helps to acidify soil for certain plants."
+"Moist, rich soil",/public/images/materials/soil.png,soil,"9,15","Ideal growing medium, providing consistent moisture and abundant nutrients."
+Organic compost,/public/images/materials/fertiliser.png,fertiliser,"9,15","Decomposed organic matter, enriching soil and improving its structure."
+Manual removal,/public/images/materials/pesticide.png,pesticide,9,"Physically removing weeds or pests by hand, effective for small infestations."
+"Loose, well-draining, slightly acidic soil",/public/images/materials/soil.png,soil,10,"Perfect for acid-loving plants, ensuring good aeration and drainage."
+Potassium-rich,/public/images/materials/fertiliser.png,fertiliser,10,Fertilizer promoting fruit and flower development and disease resistance.
+Minimal,/public/images/materials/pesticide.png,pesticide,"10,16",Indicates a very small or infrequent requirement for watering or care.
+Sandy soil,/public/images/materials/soil.png,soil,11,"Light and well-draining soil, warms quickly but retains few nutrients."
+Rarely needed,/public/images/materials/pesticide.png,pesticide,"11,15",Suggests infrequent or almost unnecessary application of a product or action.
+Citrus fertilizer,/public/images/materials/fertiliser.png,fertiliser,12,Specialized fertilizer formulated for the specific needs of citrus trees.
+Citrus NPK,/public/images/materials/fertiliser.png,fertiliser,13,Nutrient blend specifically balanced for healthy citrus tree growth and fruit production.
+Soap spray,/public/images/materials/pesticide.png,pesticide,14,"Mild insecticide, suffocating soft-bodied pests on plants."
+Loosen soil,/public/images/materials/soil.png,soil,16,"Cultivating the soil to improve aeration, drainage, and root penetration."
+Organic matter,/public/images/materials/fertiliser.png,fertiliser,16,"Decomposed plant and animal material, enriching soil fertility and structure."

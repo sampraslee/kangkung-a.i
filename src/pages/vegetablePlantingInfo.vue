@@ -56,7 +56,7 @@
       :key="material.id"
       :materialImageUrl="material.image || 'https://placehold.co/40@3x.png'"
       :materialName="material.name"
-      :materialDescription="material.type"
+      :materialDescription="material.description"
     >
     </MaterialsCard>
   </section>

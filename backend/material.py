@@ -23,12 +23,16 @@ def seed_materials():
             next(reader)  # Skip the header row
 
             for row in reader:
-                name, image, type_str, vegetable_ids_str = row
+                # *** THIS LINE IS UPDATED TO MATCH THE NEW CSV COLUMN ORDER ***
+                # Name, Image, Type, Vegetable ID, Description
+                name, image, type_str, vegetable_ids_str, description = row
 
                 # Clean up the data
                 name = name.strip()
-                image = image.strip() if image else None
+                image = image.strip() if image else None  # Handle empty image field
                 type_str = type_str.strip().lower()
+                # Handle empty description field
+                description = description.strip() if description else None
 
                 print(f"Processing material: {name}")
 
@@ -40,17 +44,47 @@ def seed_materials():
                     models.Material.name == name).first()
                 if not material:
                     material = models.Material(
-                        name=name, image=image, type=type_str)
+                        name=name,
+                        type=type_str,
+                        image=image,       # Pass the image
+                        description=description  # Pass the description
+                    )
                     db.add(material)
-                    print(f"  - Creating new material: {name}")
+                    db.flush()  # Flush to get the material.id if it's new
+                    print(f"  - Created new material: {name}")
                 else:
-                    print(f"  - Found existing material: {name}")
+                    # If material already exists, update its image and description
+                    # You might want to update other fields too if necessary
+                    material.image = image
+                    material.description = description
+                    material.type = type_str  # Update type as well
+                    print(
+                        f"  - Material '{name}' already exists. Updating image and description.")
 
-                # 2. Find all associated Vegetable objects
+                # Process vegetable links
+                vegetable_ids = []
                 if vegetable_ids_str:
-                    vegetable_ids = [int(vid.strip())
-                                     for vid in vegetable_ids_str.split(',')]
+                    try:
+                        # Split by comma and convert to integers, handling potential spaces
+                        vegetable_ids = [
+                            int(v_id.strip()) for v_id in vegetable_ids_str.split(',') if v_id.strip()]
+                    except ValueError:
+                        print(
+                            f"    - WARNING: Could not parse vegetable IDs for {name}: {vegetable_ids_str}. Skipping links.")
 
+                # Remove existing links not present in the new list to keep data consistent
+                current_veg_ids = {veg.id for veg in material.vegetables}
+                for veg_id_to_remove in current_veg_ids - set(vegetable_ids):
+                    vegetable_to_remove = db.query(models.Vegetable).filter(
+                        models.Vegetable.id == veg_id_to_remove).first()
+                    if vegetable_to_remove in material.vegetables:
+                        material.vegetables.remove(vegetable_to_remove)
+                        print(
+                            f"    - Removing link to vegetable ID: {veg_id_to_remove} ({vegetable_to_remove.name})")
+
+                if vegetable_ids:
+                    print(
+                        f"  - Linking material '{name}' to vegetables: {vegetable_ids}")
                     for veg_id in vegetable_ids:
                         vegetable = db.query(models.Vegetable).filter(
                             models.Vegetable.id == veg_id).first()
@@ -61,13 +95,16 @@ def seed_materials():
                             if vegetable not in material.vegetables:
                                 material.vegetables.append(vegetable)
                                 print(
-                                    f"    - Linking to vegetable ID: {veg_id} ({vegetable.name})")
+                                    f"    - Linking to vegetable ID: {veg_id} ({vegetable.name})"
+                                )
                             else:
                                 print(
-                                    f"    - Link to vegetable ID: {veg_id} already exists. Skipping.")
+                                    f"    - Link to vegetable ID: {veg_id} already exists. Skipping."
+                                )
                         else:
                             print(
-                                f"    - WARNING: Vegetable with ID {veg_id} not found. Skipping.")
+                                f"    - WARNING: Vegetable with ID {veg_id} not found. Skipping."
+                            )
 
             # 4. Commit all changes for the session
             db.commit()
