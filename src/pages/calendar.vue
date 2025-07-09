@@ -45,12 +45,15 @@
           <p>Start planting</p>
         </v-sheet>
       </v-timeline-item>
-      <v-timeline-item v-if="timeline" v-for="(step, index) in timeline">
+      <v-timeline-item
+        v-if="timeline && timeline.length > 0"
+        v-for="(step, index) in timeline"
+      >
         <v-sheet border="sm" color="accent" rounded="lg" class="pa-2">
-          <p class="font-weight-bold">
+          <p class="font-weight-bold">{{ step.date }}</p>
+          <p>
             {{ step.event }}
           </p>
-          <p>{{ step.date }}</p>
         </v-sheet>
       </v-timeline-item>
       <v-timeline-item v-if="calculateEstimatedHarvestDate">
@@ -73,7 +76,7 @@ import { ref, computed } from "vue";
 
 const vegetableStore = useVegetablesStore();
 const progressStore = useProgressStore();
-const timeline = progressStore.timeline;
+const { timeline } = storeToRefs(progressStore);
 const selectedVegetable = vegetableStore.selectedVegetable;
 const currentDate = new Date();
 currentDate.setDate(currentDate.getDate() - 1); //grey-out
@@ -81,10 +84,14 @@ const selectedDate = ref(null);
 
 const calculateEstimatedHarvestDate = computed(() => {
   const estimatedHarvestDate = new Date(selectedDate.value);
+  console.log(selectedVegetable);
+  console.log(selectedVegetable.estimated_harvest_time_in_seconds);
+
   estimatedHarvestDate.setSeconds(
     selectedDate.value.getSeconds() +
       selectedVegetable.estimated_harvest_time_in_seconds
   );
+  console.log(estimatedHarvestDate);
   return estimatedHarvestDate;
 });
 

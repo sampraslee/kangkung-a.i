@@ -12,8 +12,7 @@ class VegetableBase(BaseModel):
     amount_of_sunlight: Optional[str] = Field(
         None, example="6 hours of direct sunlight"
     )
-    image_url: Optional[str] = Field(
-        None, example="http://example.com/kangkung.jpg")
+    image_url: Optional[str] = Field(None, example="http://example.com/kangkung.jpg")
     planting_instructions: Optional[str] = Field(
         None, example="Plant in fertile soil..."
     )
@@ -24,6 +23,7 @@ class VegetableBase(BaseModel):
             days = self.estimated_harvest_time.days
             return f"{days} Days"
 
+    @computed_field
     def estimated_harvest_time_in_seconds(self) -> int:
         return self.estimated_harvest_time.total_seconds()
 
@@ -37,10 +37,11 @@ class VegetableBase(BaseModel):
         else:
             return f"Every {days} days"
 
+
 class VegetableCreate(VegetableBase):
     material_ids: Optional[List[int]] = Field(
         None,
-        description="Optional list of IDs of materials to associate this vegetable with."
+        description="Optional list of IDs of materials to associate this vegetable with.",
     )
 
 
@@ -53,7 +54,7 @@ class VegetableUpdate(VegetableBase):
     planting_instructions: Optional[str] = None
     material_ids: Optional[List[int]] = Field(
         None,
-        description="Optional list of IDs of materials to associate/dissociate this vegetable with (replaces current associations)."
+        description="Optional list of IDs of materials to associate/dissociate this vegetable with (replaces current associations).",
     )
 
 
