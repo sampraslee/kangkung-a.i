@@ -4,7 +4,7 @@
     width="90%"
     variant="outlined"
   ></v-textarea>
-  <v-img :src="imageUrl" class="w-200 framed-image" />
+  <v-img :src="imageUrl" class="w-66 cover" />
 </template>
 
 <script setup lang="ts">
