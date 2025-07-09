@@ -12,6 +12,7 @@
       rounded="lg"
       width="100%"
       v-model="selectedDate"
+      :min="currentDate"
     ></v-date-picker>
     <CallToActionButton
       button-text="Select Date"
@@ -74,6 +75,8 @@ const vegetableStore = useVegetablesStore();
 const progressStore = useProgressStore();
 const timeline = progressStore.timeline;
 const selectedVegetable = vegetableStore.selectedVegetable;
+const currentDate = new Date();
+currentDate.setDate(currentDate.getDate() - 1); //grey-out
 const selectedDate = ref(null);
 
 const calculateEstimatedHarvestDate = computed(() => {
