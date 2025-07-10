@@ -12,11 +12,12 @@
       rounded="lg"
       width="100%"
       v-model="selectedDate"
+      :min="currentDate"
     ></v-date-picker>
     <CallToActionButton
       button-text="Select Date"
       class="mt-3"
-      @click="logSelectedDate"
+      @click="getPlantingTimeline"
     ></CallToActionButton>
   </v-container>
 
@@ -44,6 +45,17 @@
           <p>Start planting</p>
         </v-sheet>
       </v-timeline-item>
+      <v-timeline-item
+        v-if="timeline && timeline.length > 0"
+        v-for="(step, index) in timeline"
+      >
+        <v-sheet border="sm" color="accent" rounded="lg" class="pa-2">
+          <p class="font-weight-bold">{{ step.date }}</p>
+          <p>
+            {{ step.event }}
+          </p>
+        </v-sheet>
+      </v-timeline-item>
       <v-timeline-item v-if="calculateEstimatedHarvestDate">
         <v-sheet border="sm" color="accent" rounded="lg" class="pa-2">
           <p class="font-weight-bold">
@@ -59,18 +71,27 @@
 <script setup lang="ts">
 import CallToActionButton from "../components/CallToActionButton.vue";
 import { useVegetablesStore } from "@/stores/vegetable";
+import { useProgressStore } from "@/stores/progress";
 import { ref, computed } from "vue";
 
 const vegetableStore = useVegetablesStore();
+const progressStore = useProgressStore();
+const { timeline } = storeToRefs(progressStore);
 const selectedVegetable = vegetableStore.selectedVegetable;
+const currentDate = new Date();
+currentDate.setDate(currentDate.getDate() - 1); //grey-out
 const selectedDate = ref(null);
 
 const calculateEstimatedHarvestDate = computed(() => {
   const estimatedHarvestDate = new Date(selectedDate.value);
+  console.log(selectedVegetable);
+  console.log(selectedVegetable.estimated_harvest_time_in_seconds);
+
   estimatedHarvestDate.setSeconds(
     selectedDate.value.getSeconds() +
       selectedVegetable.estimated_harvest_time_in_seconds
   );
+  console.log(estimatedHarvestDate);
   return estimatedHarvestDate;
 });
 
@@ -78,5 +99,11 @@ function logSelectedDate() {
   console.log(selectedDate.value.toDateString());
   console.log(calculateEstimatedHarvestDate.value);
   console.log(selectedVegetable.estimated_harvest_time);
+}
+
+async function getPlantingTimeline() {
+  await progressStore.getPlantingTimeline();
+  console.log("Timeline");
+  console.log(timeline);
 }
 </script>

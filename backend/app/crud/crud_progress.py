@@ -16,13 +16,14 @@ def create_user_vegetable_progress(db: Session, progress: schemas.ProgressCreate
     vegetable = db.query(models.Vegetable).filter(
         models.Vegetable.id == progress.vegetable_id).first()
     if not vegetable:
-        # Or raise an exception
         return None
 
     calculated_harvest_date: Optional[date] = None
     if vegetable.estimated_harvest_time:
         calculated_harvest_date = datetime.utcnow(
         ).date() + vegetable.estimated_harvest_time
+    if progress.vegeNickname is None:
+        progress.vegeNickname = vegetable.name
 
     db_progress = models.UserVegetableProgress(
         **progress.model_dump(),

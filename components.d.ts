@@ -11,6 +11,7 @@ declare module 'vue' {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
     CallToActionButton: typeof import('./src/components/CallToActionButton.vue')['default']
     ChecklistItemCard: typeof import('./src/components/ChecklistItemCard.vue')['default']
+    GrowingVegetableCard: typeof import('./src/components/GrowingVegetableCard.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     MaterialsCard: typeof import('./src/components/MaterialsCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
