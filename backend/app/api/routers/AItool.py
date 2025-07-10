@@ -6,8 +6,9 @@ from app import crud
 from typing import Dict, Optional
 # Import the Pydantic model too
 from app.services.timeline_service import generate_care_timeline, CareTimeline, convert_periods_to_dates
-from app.services.image_analysis_service import analyze_vegetable_image_and_advise
-
+from app.services import chat_service
+import uuid
+from langchain_core.messages import HumanMessage, AIMessage
 
 router = APIRouter()
 
@@ -65,31 +66,50 @@ def get_timeline_dates(progress_id: int, db: Session = Depends(deps.get_db)):
     return timeline_events
 
 
-# This means the full path will be /image-analysis/
-@router.post("/image_analysis")
-async def analyze_image_endpoint(
-    file: UploadFile = File(...),
-    question: Optional[str] = Form(None)
-) -> str:
+@router.post("/analyze-image-chat/{progress_id}", response_model=chat_service.AnalysisResponse)
+async def analyze_image(progress_id: int, db: Session = Depends(deps.get_db), file: UploadFile = File(...)):
     """
-    Analyzes an uploaded image of a vegetable plant and provides care advice.
-    Optionally accepts a specific question from the user.
+    Receives an image for a specific plant progress, analyzes it, 
+    and creates or continues a chat session for that plant.
     """
-    if file.content_type not in ["image/jpeg", "image/png"]:
-        raise HTTPException(
-            400, detail="Invalid file type. Only JPEG and PNG are allowed.")
+    # 1. Get the user's plant progress from the database
+    progress = crud.crud_progress.get_progress_by_id(
+        db, progress_id=progress_id)
+    if not progress:
+        raise HTTPException(status_code=404, detail="User progress not found")
 
-    if file.size is not None and file.size > 10_000_000:
-        raise HTTPException(
-            400, detail="File too large. Maximum size is 10MB.")
+    # 2. Check if a chat session already exists for this plant
+    session_id = progress.chat_session_id
+    is_new_chat = False
+    if not session_id:
+        is_new_chat = True
+        # If not, create a new session ID and save it to the database
+        session_id = str(uuid.uuid4())
+        progress.chat_session_id = session_id
+        db.commit()
+        db.refresh(progress)
 
-    try:
-        contents = await file.read()
-        analysis_result = await analyze_vegetable_image_and_advise(
-            image_content=contents,
-            question=question
-        )
-        return analysis_result["analysis"]
-    except Exception as e:
-        raise HTTPException(
-            500, detail=f"An error occurred while processing the image: {str(e)}")
+    # 3. Analyze the image
+    contents = await file.read()
+    analysis_result = await chat_service.analyze_plant_image(image_bytes=contents)
+
+    # 4. If it's a new chat, "prime" the history
+    if is_new_chat:
+        history = chat_service.get_message_history(session_id)
+        history.add_message(HumanMessage(
+            content="Here is the picture of my plant, can you analyze it?"))
+        history.add_message(AIMessage(content=analysis_result))
+
+    return {"session_id": session_id, "analysis": analysis_result}
+
+
+@router.post("/continue-chat", response_model=chat_service.ChatResponse)
+async def continue_chat_session(request: chat_service.ChatRequest):
+    """
+    Continues an existing chat session using the session_id.
+    """
+    ai_response = await chat_service.continue_chat(
+        session_id=request.session_id,
+        user_input=request.user_input
+    )
+    return {"ai_response": ai_response}
