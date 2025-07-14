@@ -3,12 +3,9 @@ from fastapi import APIRouter, File, UploadFile, HTTPException, Form, Depends
 from sqlalchemy.orm import Session
 from app.api import deps
 from app import crud
-from typing import Dict, Optional
-# Import the Pydantic model too
 from app.services.timeline_service import generate_care_timeline, CareTimeline, convert_periods_to_dates
 from app.services import chat_service
-import uuid
-from langchain_core.messages import HumanMessage, AIMessage
+from datetime import datetime
 
 router = APIRouter()
 
@@ -67,49 +64,90 @@ def get_timeline_dates(progress_id: int, db: Session = Depends(deps.get_db)):
 
 
 @router.post("/analyze-image-chat/{progress_id}", response_model=chat_service.AnalysisResponse)
-async def analyze_image(progress_id: int, db: Session = Depends(deps.get_db), file: UploadFile = File(...)):
+async def analyze_image_and_save(progress_id: int, db: Session = Depends(deps.get_db), file: UploadFile = File(...)):
     """
-    Receives an image for a specific plant progress, analyzes it, 
-    and creates or continues a chat session for that plant.
+    Analyzes a plant image for a specific progress entry,
+    and saves the new analysis to the database.
     """
-    # 1. Get the user's plant progress from the database
     progress = crud.crud_progress.get_progress_by_id(
         db, progress_id=progress_id)
     if not progress:
         raise HTTPException(status_code=404, detail="User progress not found")
 
-    # 2. Check if a chat session already exists for this plant
-    session_id = progress.chat_session_id
-    is_new_chat = False
-    if not session_id:
-        is_new_chat = True
-        # If not, create a new session ID and save it to the database
-        session_id = str(uuid.uuid4())
-        progress.chat_session_id = session_id
-        db.commit()
-        db.refresh(progress)
-
-    # 3. Analyze the image
     contents = await file.read()
-    analysis_result = await chat_service.analyze_plant_image(image_bytes=contents)
+    previous_notes = progress.checkUpNotes
 
-    # 4. If it's a new chat, "prime" the history
-    if is_new_chat:
-        history = chat_service.get_message_history(session_id)
-        history.add_message(HumanMessage(
-            content="Here is the picture of my plant, can you analyze it?"))
-        history.add_message(AIMessage(content=analysis_result))
+    vegetable_name = progress.vegetable.name
 
-    return {"session_id": session_id, "analysis": analysis_result}
-
-
-@router.post("/continue-chat", response_model=chat_service.ChatResponse)
-async def continue_chat_session(request: chat_service.ChatRequest):
-    """
-    Continues an existing chat session using the session_id.
-    """
-    ai_response = await chat_service.continue_chat(
-        session_id=request.session_id,
-        user_input=request.user_input
+    analysis_result = await chat_service.analyze_plant_image(
+        image_bytes=contents,
+        vegetable_name=vegetable_name,
+        previous_notes=previous_notes
     )
+
+    today_date = datetime.now().strftime("%Y-%m-%d %H:%M")
+    new_log_entry = (
+        f"\n\n--- Check-up on {today_date} ---\n\n"
+        f"[USER]: (Uploaded an image for analysis of {vegetable_name})\n\n"
+        f"[AI]:\n{analysis_result}"
+    )
+
+    if progress.checkUpNotes:
+        progress.checkUpNotes += new_log_entry
+    else:
+        progress.checkUpNotes = new_log_entry.strip()
+
+    db.commit()
+
+    return {"session_id": str(progress_id), "analysis": analysis_result}
+
+
+@router.post("/continue-chat/{progress_id}", response_model=chat_service.ChatResponse)
+async def continue_chat_session_and_save(progress_id: int, request: chat_service.ChatRequest, db: Session = Depends(deps.get_db)):
+    """
+    Continues a chat based on the full history from checkUpNotes
+    and saves the new turn to the database.
+    """
+    progress = crud.crud_progress.get_progress_by_id(
+        db, progress_id=progress_id)
+    if not progress or not progress.checkUpNotes:
+        raise HTTPException(
+            status_code=404, detail="No chat history found for this plant.")
+
+    vegetable_name = progress.vegetable.name
+    ai_response = await chat_service.continue_chat(
+        history=progress.checkUpNotes,
+        user_input=request.user_input,
+        vegetable_name=vegetable_name
+    )
+    new_log_entry = (
+        f"\n\n[USER]: {request.user_input}\n\n"
+        f"[AI]:\n{ai_response}"
+    )
+
+    progress.checkUpNotes += new_log_entry
+    db.commit()
+
     return {"ai_response": ai_response}
+
+
+@router.post("/summarize-chat/{progress_id}", response_model=chat_service.SummaryResponse)
+async def summarize_chat_history(progress_id: int, db: Session = Depends(deps.get_db)):
+    """
+    Summarizes the entire chat history for a plant and replaces the
+    checkUpNotes with the summary.
+    """
+    progress = crud.crud_progress.get_progress_by_id(
+        db, progress_id=progress_id)
+    if not progress or not progress.checkUpNotes:
+        raise HTTPException(
+            status_code=404, detail="No notes found to summarize.")
+
+    # 1. Call the summarization service with the current notes
+    summary = await chat_service.summarize_notes(notes=progress.checkUpNotes)
+
+    # 2. Replace the old notes with the new summary in the database
+    progress.checkUpNotes = summary
+    db.commit()
+
+    return {"summary": summary}

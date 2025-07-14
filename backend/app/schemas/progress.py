@@ -8,7 +8,8 @@ class ProgressBase(BaseModel):
     lastWatered: Optional[datetime] = Field(None)
     lastFertilized: Optional[datetime] = Field(None)
     lastCheckup: Optional[date] = Field(None)
-    checkUpNotes: Optional[str] = Field(None, example="Looks healthy.")
+    checkUpNotes: Optional[str] = Field(
+        None, example="Started planting. This is my first checkup.")
 
 
 class ProgressCreate(ProgressBase):

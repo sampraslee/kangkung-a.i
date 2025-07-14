@@ -8,6 +8,7 @@ from langchain_core.prompts import ChatPromptTemplate, MessagesPlaceholder
 from langchain_core.chat_history import InMemoryChatMessageHistory
 from langchain_core.runnables.history import RunnableWithMessageHistory
 from pydantic import BaseModel
+from typing import Optional
 
 
 class ChatRequest(BaseModel):
@@ -24,79 +25,53 @@ class AnalysisResponse(BaseModel):
     analysis: str
 
 
+class SummaryResponse(BaseModel):
+    summary: str
+
+
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash", temperature=0.3, api_key=GEMINI_API_KEY)
-
-# --- DISCLAIMER ---
-# This global 'store' is simple for a demo but is NOT production-ready.
-# In a real app, use a database, Redis, or another persistent cache for chat history.
-store = {}
+    model="gemini-2.0-flash", temperature=0.3, api_key=GEMINI_API_KEY)
 
 
-def get_message_history(session_id: str):
-    if session_id not in store:
-        store[session_id] = InMemoryChatMessageHistory()
-    return store[session_id]
+async def analyze_plant_image(image_bytes: bytes, vegetable_name: str, previous_notes: Optional[str]) -> str:
+    # --- MODIFICATION 1: The function now requires the vegetable_name ---
+    image_base64 = base64.b64encode(image_bytes).decode()
 
+    # --- MODIFICATION 2: The prompt is completely rewritten for better control ---
+    prompt_text = f"""
+    You are analyzing an image of a **{vegetable_name}** plant. Please follow these steps:
 
-chat_prompt = ChatPromptTemplate.from_messages([
-    ("system", """You are a gardening expert and can provide tailored care advice. 
+    **1. The Plant:**
+    * First, confirm if the plant in the image looks like a **{vegetable_name}**.
+    * If it does not match, stop and politely tell the user what plant is in the image and that the image does not seem to be a {vegetable_name} and they should start a new check-up for the correct plant.
+    * If it matches, proceed to the next steps.
+
+    **1. Assess the vegetable's condition:** Determine if the vegetable is:
+    * Fully grown
+    * Growing and healthy
+    * Sick
+
+    **2. The characteristics observed:** Detail the key features you observe in the image, such as leaf color, stem strength, and any signs of disease or pests.
+
+    **3. Specific advice based on the assessment:**
+    * **If Fully Grown:** Advise on harvesting.
+    * **If Growing and Healthy:** Reinforce good care practices.
+    * **If Sick:** Identify the likely cause and suggest organic-first solutions.
+    """
+
+    if previous_notes:
+        prompt_text = f"For context, here are notes from the last check-up:\n---\n{previous_notes}\n---\n\n{prompt_text}"
+
+    analysis_prompt = ChatPromptTemplate.from_messages([
+        ("system", """You are a gardening expert and can provide tailored care advice. 
         You communicate like a Malaysian who speaks English and occasionally Malay. 
         Be clear, concise, use emoticons, and prioritize planting solutions and vegetable guidance.
         Anything that is not related you will say you do not know."""),
-    MessagesPlaceholder(variable_name="history"),
-    ("human", "{input}"),
-])
-chain_with_history = RunnableWithMessageHistory(
-    chat_prompt | llm,
-    get_message_history,
-    input_messages_key="input",
-    history_messages_key="history"
-)
-
-
-async def analyze_plant_image(image_bytes: bytes) -> str:
-    image_base64 = base64.b64encode(image_bytes).decode()
-
-    analysis_prompt = ChatPromptTemplate.from_messages([
-        ("system",
-         """You are a gardening expert capable of analyzing vegetable images and providing advice on how to care for vegetables. 
-        You will analyze the image, determine the vegetable\'s condition 
-        (fully grown, healthy and growing, or sick), and provide tailored care advice. 
-        You communicate like a Malaysian who speaks English and occasionally Malay. 
-        Be clear, concise, use emoticons, and prioritize organic solutions. Anything that is not related you will say you do not know."""),
         ("human", [
-            {"type": "text", "text": """Analyze the image of the vegetable plant, 
-                and provide comprehensive advice on its condition and how to care for it. Follow these steps:
-
-                **Assess the types of plants:**
-                * Provide their names
-
-                **Assess the vegetable\'s condition:** Determine if the vegetable is:
-                * Fully grown
-                * Growing and healthy
-                * Sick
-
-                **Describe the characteristics observed:** Detail the key features you observe in the image, such as:
-                * Leaf color, shape, and any signs of disease or pests
-                * Stem strength and appearance
-                * Size and overall appearance of the vegetable itself (if present)
-                * Presence of any abnormalities or damage
-
-                **Provide specific advice based on the assessment:**
-
-                * **If Fully Grown :** Advise on the best time and method for harvesting. 
-                Also, provide general tips for maintaining soil health after harvest.
-
-                * **If Growing and Healthy :** Reinforce that the plant is in good condition. 
-
-                * **If Sick :** Identify the likely cause of the sickness (e.g., specific disease, pest infestation, nutrient deficiency). 
-                Provide detailed advice on how to treat the problem, including specific remedies, 
-                organic or chemical treatments (if appropriate), and changes to watering or fertilization practices.
-                """},
+            {"type": "text", "text": prompt_text},
             {"type": "image_url", "image_url": f"data:image/jpeg;base64,{image_base64}"}
         ]),
     ])
@@ -106,9 +81,40 @@ async def analyze_plant_image(image_bytes: bytes) -> str:
     return response.content
 
 
-async def continue_chat(session_id: str, user_input: str) -> str:
-    response = await chain_with_history.ainvoke(
-        {"input": user_input},
-        {"configurable": {"session_id": session_id}}
-    )
+async def continue_chat(history: str, user_input: str, vegetable_name: str) -> str:
+    chat_prompt = ChatPromptTemplate.from_messages([
+        ("system", f"""You are a gardening expert providing tailored care advice for a plant.
+         You communicate like a Malaysian who speaks English and occasionally Malay. 
+         Be clear, concise, use emoticons, and prioritize planting solutions and guidance.
+         If the user asks about anything not related to gardening"""),
+        ("user", "Here is our conversation so far:\n---\n{history}\n---"),
+        ("human", "My new question is: {input}"),
+    ])
+
+    chain = chat_prompt | llm
+    response = await chain.ainvoke({"history": history, "input": user_input})
+    return response.content
+
+
+async def summarize_notes(notes: str) -> str:
+    """
+    Takes a long conversation history and returns a concise summary.
+    """
+    summarization_prompt = ChatPromptTemplate.from_messages([
+        ("system",
+         """You are a gardening expert and can make a concise and accurate summary of text.  
+         Read the entire conversation log between a user and you. 
+         Your task is to create a concise summary that includes:
+         1. The type of plant.
+         2. Key health issues identified over time (e.g., pests, deficiencies).
+         3. Important treatments or advice given.
+         4. The last known status of the plant.
+         Keep the summary in a single block of text."""),
+        ("human",
+         "Please summarize these notes. The summary must only be related to the plant I am planting. :\n\n{notes_history}")
+    ])
+
+    chain = summarization_prompt | llm
+    response = await chain.ainvoke({"notes_history": notes})
+
     return response.content
