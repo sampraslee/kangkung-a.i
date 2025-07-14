@@ -1,6 +1,6 @@
 <template>
   <v-card class="pa-6 ga-4 border-sm rounded-lg d-flex flex-column">
-    <v-img :src="vegetableImageUrl"> </v-img>
+    <v-img :src="vegetableImageUrl"></v-img>
 
     <v-container class="vegetableInfo pa-0 ga-3 d-flex flex-column">
       <v-card-title class="font-weight-bold pa-0">
@@ -11,21 +11,21 @@
         size="large"
         class="rounded-lg bg-accent"
       >
-        Estimated time to harvest: {{ estimatedHarvestTime }}
+      Estimated time to harvest: <span :style="{ marginLeft: '4px',fontWeight: 600 }">{{ estimatedHarvestTime }}</span>
       </v-chip>
       <v-chip
         prepend-icon="mdi-water-outline"
         size="large"
         class="rounded-lg bg-accent"
       >
-        Watering frequency: {{ wateringFrequency }}
+        Watering frequency: <span :style="{ marginLeft: '4px',fontWeight: 600 }">{{ wateringFrequency }}</span>
       </v-chip>
       <v-chip
         prepend-icon="mdi-weather-sunny"
         size="large"
         class="rounded-lg bg-accent"
       >
-        Amount of sunlight: {{ amountOfSunlight }}
+        Amount of sunlight: <span :style="{ marginLeft: '4px',fontWeight: 600 }">{{ amountOfSunlight }}</span>
       </v-chip>
     </v-container>
 

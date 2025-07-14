@@ -29,6 +29,7 @@ class Material(Base):
     name = Column(String, nullable=False)
     image = Column(String, nullable=True)
     type = Column(Enum(MaterialType), nullable=False)
+    description = Column (String, nullable=True)
 
     vegetables = relationship(
         "Vegetable",

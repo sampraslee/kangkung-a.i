@@ -21,7 +21,7 @@
   <RouterLink to="/checkupChatbot">
     <CallToActionButton
       button-text="Analyze"
-      @click="logUploadedImg"
+      @click="UploadPhotoFile(vegetableImage)"
       v-if="vegetableImage != null"
     ></CallToActionButton>
   </RouterLink>
@@ -30,8 +30,17 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import CallToActionButton from "@/components/CallToActionButton.vue";
+import { useUserStore } from "@/stores/user";
 
 const vegetableImage = ref(null);
+const userStore = useUserStore();
+
+function UploadPhotoFile(file: File | null){
+  if(file != null){
+    userStore.newUploadedPhoto(file);
+    console.log(file);
+  }
+}
 
 function logUploadedImg() {
   console.log(typeof vegetableImage.value);
