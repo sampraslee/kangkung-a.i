@@ -1,32 +1,48 @@
 <template>
-  <v-card class="pa-6 ga-4 border-sm rounded-lg d-flex flex-column">
+  <v-card
+    class="pa-6 ga-4 border-sm rounded-lg d-flex flex-column"
+    border="none"
+    elevation="0"
+  >
     <v-img :src="vegetableImageUrl"></v-img>
 
     <v-container class="vegetableInfo pa-0 ga-3 d-flex flex-column">
       <v-card-title class="font-weight-bold pa-0">
         {{ vegetableName }}
       </v-card-title>
-      <v-chip
-        prepend-icon="mdi-clock-time-four-outline"
-        size="large"
-        class="rounded-lg bg-accent"
-      >
-      Estimated time to harvest: <span :style="{ marginLeft: '4px',fontWeight: 600 }">{{ estimatedHarvestTime }}</span>
-      </v-chip>
-      <v-chip
-        prepend-icon="mdi-water-outline"
-        size="large"
-        class="rounded-lg bg-accent"
-      >
-        Watering frequency: <span :style="{ marginLeft: '4px',fontWeight: 600 }">{{ wateringFrequency }}</span>
-      </v-chip>
-      <v-chip
-        prepend-icon="mdi-weather-sunny"
-        size="large"
-        class="rounded-lg bg-accent"
-      >
-        Amount of sunlight: <span :style="{ marginLeft: '4px',fontWeight: 600 }">{{ amountOfSunlight }}</span>
-      </v-chip>
+      <div class="d-inline-flex align-center ga-2">
+        <p>Harvest in:</p>
+        <v-chip
+          color="primary"
+          prepend-icon="mdi-calendar-clock"
+          size="large"
+          rounded="pill"
+        >
+          {{ estimatedHarvestTime }}
+        </v-chip>
+      </div>
+      <div class="d-inline-flex align-center ga-2">
+        <p>Watering:</p>
+        <v-chip
+          prepend-icon="mdi-water-outline"
+          color="primary"
+          size="large"
+          rounded="pill"
+        >
+          {{ wateringFrequency }}
+        </v-chip>
+      </div>
+      <div class="d-inline-flex align-center ga-2">
+        <p>Sunlight:</p>
+        <v-chip
+          prepend-icon="mdi-weather-sunny"
+          color="primary"
+          size="large"
+          rounded="pill"
+        >
+          {{ amountOfSunlight }}
+        </v-chip>
+      </div>
     </v-container>
 
     <RouterLink :to="`/vegetablePlantingInfo/`" @click="handleHowToGrowClick">
