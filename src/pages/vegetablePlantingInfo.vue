@@ -1,60 +1,84 @@
 <template>
-  <v-img :src="vegetableStore.selectedVegetable.image_url"></v-img>
+  <v-container fluid class="pa-4 pa-lg-6">
+    <v-row>
+      <!-- Column 1: Vegetable Info -->
+      <v-col cols="6" lg="6" class="sticky-col">
+        <v-row justify="center">
 
-  <!-- Kangkung Info -->
-  <div class="vegetable-info bg-accent pa-4 rounded-lg mb-6">
-    <h3 class="mb-4">{{ vegetableStore.selectedVegetable.name }}</h3>
-    <v-chip prepend-icon="mdi-clock-time-four-outline" variant="text" class="mb-3">
-      Estimated time to harvest:
-      <span :style="{ marginLeft: '4px', fontWeight: 600 }" v-html="
-          vegetableStore.selectedVegetable.estimated_harvest_time_formatted
-        "></span>
-    </v-chip>
-    <v-chip prepend-icon="mdi-water-outline" variant="text" class="mb-3">
-      Watering frequency:
-      <span :style="{ marginLeft: '4px', fontWeight: 600 }"
-        v-html="vegetableStore.selectedVegetable.watering_frequency_formatted"></span>
-    </v-chip>
-    <v-chip prepend-icon="mdi-weather-sunny" variant="text">
-      Amount of sunlight:
-      <span :style="{ marginLeft: '4px', fontWeight: 600 }"
-        v-html="vegetableStore.selectedVegetable.amount_of_sunlight"></span>
-    </v-chip>
-  </div>
+          <v-card class="pa-6 ga-4 border-lg rounded-lg d-flex flex-column" border="none" elevation="0">
 
-  <!-- How to grow -->
-  <section id="planting-instructions" class="mb-6">
-    <h3>How to grow</h3>
-    <v-container class="ps-8">
-      <ol>
-        <li class="mb-2">Choose a container or garden bed with good drainage.</li>
-        <li class="mb-2">Fill with nutrient-rich, moist soil or compost.</li>
-        <li class="mb-2">Sow seeds or plant cuttings about 1-2 inches deep.</li>
-        <li class="mb-2">Keep the soil consistently moist, but not waterlogged.</li>
-        <li class="mb-2">Place in an area receiving full sunlight (at least 6 hours daily).</li>
-        <li>Sow seeds or plant cuttings about 1-2 inches deep.</li>
-      </ol>
-    </v-container>
-  </section>
+            <v-img :src="vegetableStore.selectedVegetable.image_url"></v-img>
 
-  <!-- What you'll need -->
-  <section id="materials-needed" class="mb-6">
-    <h3 class="mb-4">What you'll need</h3>
-    <MaterialsCard v-for="material in uniqueMaterials" :key="material.id"
-      :materialImageUrl="material.image || 'https://placehold.co/40@3x.png'" :materialName="material.name"
-      :materialDescription="material.description">
-    </MaterialsCard>
-  </section>
+            <v-container class="vegetableInfo pa-0 ga-3 d-flex flex-column">
 
-  <!-- Videos for you  -->
-  <section id="relevant-videos" class="mb-6">
-    <h3 class="mb-6">Videos for you</h3>
-    <VideoCard></VideoCard>
-  </section>
+              <v-card-title class="font-weight-bold pa-0">
+                {{ vegetableStore.selectedVegetable.name }}
+              </v-card-title>
 
-  <RouterLink :to="`/vegetablePlantingChecklist`">
-    <CallToActionButton button-text="I want to grow" class="mb-6"></CallToActionButton>
-  </RouterLink>
+              <div class="d-inline-flex align-center ga-2">
+                <p>Harvest in:</p>
+                <v-chip color="primary" prepend-icon="mdi-calendar-clock" size="large" rounded="pill">
+                  {{ vegetableStore.selectedVegetable.estimated_harvest_time_formatted }}
+                </v-chip>
+              </div>
+
+              <div class="d-inline-flex align-center ga-2">
+                <p>Watering:</p>
+                <v-chip prepend-icon="mdi-water-outline" color="primary" size="large" rounded="pill">
+                  {{ vegetableStore.selectedVegetable.watering_frequency_formatted }}
+                </v-chip>
+              </div>
+
+              <div class="d-inline-flex align-center ga-2">
+                <p>Sunlight:</p>
+                <v-chip prepend-icon="mdi-weather-sunny" color="primary" size="large" rounded="pill">
+                  {{ vegetableStore.selectedVegetable.amount_of_sunlight }}
+                </v-chip>
+              </div>
+            </v-container>
+          </v-card>
+        </v-row>
+      </v-col>
+
+      <!-- Column 2: How to grow -->
+      <v-col cols="12" lg="6">
+        <v-row class="align-center pa-4">
+          <!-- How to grow -->
+          <div class="align-center ga-2 mt-8 mb-6">
+            <h3 class="mb-4">How to grow</h3>
+            <ol>
+              <li class="ma-4">Choose a container or garden bed with good drainage.</li>
+              <li class="ma-4">Fill with nutrient-rich, moist soil or compost.</li>
+              <li class="ma-4">Sow seeds or plant cuttings about 1-2 inches deep.</li>
+              <li class="ma-4">Keep the soil consistently moist, but not waterlogged.</li>
+              <li class="ma-4">Place in an area receiving full sunlight (at least 6 hours daily).</li>
+              <li class="ma-4">Sow seeds or plant cuttings about 1-2 inches deep.</li>
+            </ol>
+          </div>
+
+          <!-- What you'll need -->
+          <div class="align-center ga-2 mt-8 mb-6">
+            <h3 class="mb-4">What you'll need</h3>
+            <MaterialsCard v-for="material in uniqueMaterials" :key="material.id"
+              :materialImageUrl="material.image || 'https://placehold.co/40@3x.png'" :materialName="material.name"
+              :materialDescription="material.description" class="mb-4" />
+          </div>
+
+          <!-- Videos for you  -->
+          <section>
+            <h3 class="mb-4">Videos for you</h3>
+            <VideoCard />
+          </section>
+        </v-row>
+
+        <div class="flex-column align-center ga-2 mt-8 mb-6">
+          <RouterLink :to="`/vegetablePlantingChecklist`">
+            <CallToActionButton button-text="I want to grow"></CallToActionButton>
+          </RouterLink>
+        </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script setup lang="ts">
@@ -83,3 +107,12 @@ const uniqueMaterials = computed(() =>
     : []
 );
 </script>
+
+<style scoped>
+.sticky-col {
+  position: sticky;
+  top: 32px; /* Adjust as needed for your header/nav */
+  align-self: flex-start; /* Ensures it doesn't stretch full height */
+  z-index: 2; /* Make sure it stays above other content if needed */
+}
+</style>

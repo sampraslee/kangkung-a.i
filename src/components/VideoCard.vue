@@ -2,8 +2,8 @@
   <a :href="'https://www.google.com'" target="_blank" style="text-decoration: none;">
     <v-card class="d-flex ga-4 pa-4 rounded-lg" style="cursor: pointer;">
       <img :src="videoThumbnail" class="videoThumbnail" />
-      <div class="video-info">
-        <v-card-title class="pa-0">{{ videoTitle }}</v-card-title>
+      <div class="video-info justify-start">
+        <v-card-title class="pa-0 mb-3">{{ videoTitle }}</v-card-title>
         <v-card-text class="pa-0">
           {{ videoSummary }}
         </v-card-text>

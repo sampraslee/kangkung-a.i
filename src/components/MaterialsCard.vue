@@ -8,7 +8,7 @@
       class="material-img flex-shrink-0" 
       cover
     />
-    <div class="material-info d-flex flex-column justify-center flex-grow-1">
+    <div class="material-info d-flex flex-column flex-grow-1">
       <v-card-title class="pa-0">{{ materialName }}</v-card-title>
       <v-card-text class="pa-0"> {{ materialDescription }}</v-card-text>
     </div>

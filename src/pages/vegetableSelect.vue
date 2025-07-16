@@ -7,7 +7,7 @@
     </p>
     <v-text-field
       bg-color="white"
-      label="ask a question"
+      label="Ask a question"
       icon-color="primary"
       variant="outlined"
       rounded="xl"

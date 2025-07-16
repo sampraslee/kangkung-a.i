@@ -1,5 +1,5 @@
 <template>
-  <v-btn class="bg-primary text-white w-100 font-weight-black" size="large">
+  <v-btn class="bg-primary text-white font-weight-black w-100 flex-column align-center" size="large">
     {{ buttonText }}
   </v-btn>
 </template>
