@@ -24,9 +24,11 @@
         :estimated-harvest-time="vegetable.estimated_harvest_time_formatted"
         :watering-frequency="vegetable.watering_frequency_formatted"
         :amount-of-sunlight="vegetable.amount_of_sunlight"
+        :button-route="`/vegetablePlantingInfo/`"
+        @card-button-clicked="handleHowToGrowClick(vegetable.id)"
         width="360"
       >
-        <template #button-text>How to grow?</template>
+        <template #button-text> How to grow? </template>
       </VegetableCard>
     </v-container>
   </section>
@@ -45,4 +47,9 @@ onMounted(() => {
   console.log("on mount");
   vegetableStore.getVegetables();
 });
+
+function handleHowToGrowClick(vegetableID) {
+  // Only save the vegetableId in the selectedVegetable state
+  vegetableStore.getSelectedVegetable(vegetableID);
+}
 </script>

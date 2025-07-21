@@ -45,11 +45,12 @@
       </div>
     </v-container>
 
-    <RouterLink :to="`/vegetablePlantingInfo/`" @click="handleHowToGrowClick">
-      <CallToActionButton>
-        <slot name="button-text"></slot>
-      </CallToActionButton>
-    </RouterLink>
+    <CallToActionButton
+      :to="buttonRoute"
+      @button-clicked="$emit('card-button-clicked')"
+    >
+      <slot name="button-text"></slot>
+    </CallToActionButton>
   </v-card>
 </template>
 
@@ -65,10 +66,13 @@ const props = defineProps({
   estimatedHarvestTime: { type: Number, required: true },
   wateringFrequency: { type: Number, required: true },
   amountOfSunlight: { type: String, required: true },
+  buttonRoute: { type: String, required: true },
 });
 
 function handleHowToGrowClick() {
   // Only save the vegetableId in the selectedVegetable state
   vegetableStore.getSelectedVegetable(props.vegetableId);
 }
+
+defineEmits(["card-button-clicked"]);
 </script>

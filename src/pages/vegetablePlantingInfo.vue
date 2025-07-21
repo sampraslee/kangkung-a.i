@@ -10,7 +10,8 @@
         "
         :watering-frequency="selectedVegetable.watering_frequency_formatted"
         :amount-of-sunlight="selectedVegetable.amount_of_sunlight"
-        width="320"
+        :button-route="`/vegetablePlantingChecklist/`"
+        width="360"
       >
         <template #button-text>Let's grow</template>
       </VegetableCard>
