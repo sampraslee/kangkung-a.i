@@ -46,7 +46,9 @@
     </v-container>
 
     <RouterLink :to="`/vegetablePlantingInfo/`" @click="handleHowToGrowClick">
-      <CallToActionButton button-text="How to grow"></CallToActionButton>
+      <CallToActionButton>
+        <slot name="button-text"></slot>
+      </CallToActionButton>
     </RouterLink>
   </v-card>
 </template>

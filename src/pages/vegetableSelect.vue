@@ -25,7 +25,9 @@
         :watering-frequency="vegetable.watering_frequency_formatted"
         :amount-of-sunlight="vegetable.amount_of_sunlight"
         width="360"
-      ></VegetableCard>
+      >
+        <template #button-text>How to grow?</template>
+      </VegetableCard>
     </v-container>
   </section>
 </template>
