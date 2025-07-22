@@ -83,11 +83,7 @@ export const useVegetablesStore = defineStore("vegetable", {
 
     async filterVegetablesByUserCriteria(userCriteria: string) {
       const url = `http://127.0.0.1:8000/AItool/filter-vegetables`;
-
-      // if (!userCriteria) {
-      //   this.filteredVegetables = [];
-      // }
-
+      this.filteredVegetables = [];
       try {
         const response = await axios.post(url, { criteria: userCriteria });
         const results = response.data;
