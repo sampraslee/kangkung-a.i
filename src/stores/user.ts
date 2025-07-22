@@ -1,15 +1,13 @@
-import axios from "axios"; //for api
-import { defineStore } from "pinia";
+// stores/user.ts
+import { defineStore } from 'pinia'
+import { ref } from 'vue'
 
-export const useUserStore = defineStore("user", {
-  state: () => ({
-    uploadedPhoto: null,
-    user: null,
-  }),
+export const useUserStore = defineStore('user', () => {
+  const uploadedPhoto = ref<File | null>(null)
 
-  actions: {
-    newUploadedPhoto(photo: File) {
-      this.uploadedPhoto = photo;
-    },
-  },
-});
+  function newUploadedPhoto(file: File) {
+    uploadedPhoto.value = file
+  }
+
+  return { uploadedPhoto, newUploadedPhoto }
+})
