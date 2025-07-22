@@ -20,10 +20,12 @@ const kangkungTheme = {
   // what are our colors?
   colors: {
     primary: "#00A550",
+    primary50: "#E6F6EE",
+    primary900: "#004522",
     secondary: "#008BA3",
-    accent: "#E6F6E7",
     white: "#FEFEFA",
     black: "#26221E",
+    background: "#EFEAE4",
   },
 };
 export default createVuetify({

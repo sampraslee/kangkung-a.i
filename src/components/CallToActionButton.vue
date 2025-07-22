@@ -1,17 +1,21 @@
 <template>
-  <v-btn class="bg-primary text-white w-100" size="large">
-    {{ buttonText }}
+  <v-btn
+    class="bg-primary text-white text-decoration-none font-weight-black w-100 flex-column align-center"
+    size="large"
+    :to="to"
+    @click="$emit('button-clicked')"
+  >
+    <slot></slot>
   </v-btn>
 </template>
 
-<script>
-export default {
-  name: "CallToActionButton",
-  props: {
-    buttonText: {
-      type: String,
-      default: "Button text",
-    },
+<script setup lang="ts">
+defineProps({
+  to: {
+    type: String,
+    required: true,
   },
-};
+});
+
+defineEmits(["button-clicked"]);
 </script>

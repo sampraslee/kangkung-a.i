@@ -1,15 +1,22 @@
 <template>
-  <a :href="'https://www.google.com'" target="_blank" style="text-decoration: none;">
-    <v-card class="d-flex ga-4 pa-4 rounded-lg" style="cursor: pointer;">
-      <img :src="videoThumbnail" class="videoThumbnail" />
-      <div class="video-info">
-        <v-card-title class="pa-0">{{ videoTitle }}</v-card-title>
+  <v-card
+    class="d-flex flex-column ga-4 pa-4 rounded-lg"
+    elevation="0"
+    width="280"
+  >
+    <v-img :src="videoThumbnail" class="videoThumbnail" />
+    <div class="d-flex flex-column video-info justify-space-between">
+      <div class="video-copy">
+        <v-card-title class="pa-0 font-weight-bold">{{
+          videoTitle
+        }}</v-card-title>
         <v-card-text class="pa-0">
           {{ videoSummary }}
         </v-card-text>
       </div>
-    </v-card>
-  </a>
+      <a :href="videoLink" class="text-primary">Watch video</a>
+    </div>
+  </v-card>
 </template>
 
 <script setup lang="ts">
@@ -20,15 +27,15 @@ const props = defineProps({
   },
   videoTitle: {
     type: String,
-    default: "Beginners guide to growing your vegetable",
+    default: "Video title",
   },
   videoSummary: {
     type: String,
-    default: "Here's a quick guide to getting started with growing your vegetable.",
+    default: "This is the description for the video.",
   },
   videoLink: {
     type: String,
-    default: "#"
-  }
-})
+    default: "https://youtu.be/dQw4w9WgXcQ?si=WrPOjesR3ny1USz2",
+  },
+});
 </script>
