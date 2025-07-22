@@ -35,15 +35,15 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { ref, computed, onMounted } from "vue";
+import { ref, computed, onMounted} from "vue";
 import { useUserStore } from "@/stores/user";
 import { marked } from 'marked';
 
+const chatHistory = ref<any[]>([]);
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
 const userInput = ref("");
-const chatHistory = ref([]);
 const progressId = "2"
 const imageUrl = computed(() => {
   if (userStore.uploadedPhoto) {
@@ -75,6 +75,7 @@ async function imageAnalysis(image) {
 
 async function getGardeningAdvice(query, context) {
   const url = `http://127.0.0.1:8000/AItool/continue-chat/${progressId}`;
+  console.log(query)
   try {
     const response = await axios.post(
       url,
@@ -98,15 +99,15 @@ async function getGardeningAdvice(query, context) {
 
 async function sendMessage() {
   if (!userInput.value.trim()) return;
-  chatHistory.value.push({ sender: "user", text: userInput.value });
+  const userMessage = userInput.value;
+  chatHistory.value.push({ sender: "user", text: userMessage });
+  userInput.value = ""; 
   const context = chatHistory.value
     .map((msg) => `${msg.sender}: ${msg.text}`)
     .join("\n");
-  userInput.value = ""; 
-  const response = await getGardeningAdvice(userInput.value, context); 
+  const response = await getGardeningAdvice(userMessage, context); 
   chatHistory.value.push({ sender: "bot", text: response }); 
 }
-
 const renderMarkdown = (markdownText: string) => { 
   return marked.parse(markdownText, { breaks: true });
 };
@@ -175,6 +176,7 @@ async function exitChatAndSummarize() {
   flex-grow: 1;
   overflow-y: auto;
   padding: 20px;
+  max-height: 100%;
 }
 .message {
   margin-bottom: 10px;

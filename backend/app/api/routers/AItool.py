@@ -143,8 +143,10 @@ async def summarize_chat_history(progress_id: int, db: Session = Depends(deps.ge
         raise HTTPException(
             status_code=404, detail="No notes found to summarize.")
 
+    # 1. Call the summarization service with the current notes
     summary = await chat_service.summarize_notes(notes=progress.checkUpNotes)
 
+    # 2. Replace the old notes with the new summary in the database
     progress.checkUpNotes = summary
     db.commit()
 
