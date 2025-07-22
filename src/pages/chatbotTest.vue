@@ -24,7 +24,7 @@
     </div>
 
     <div class="input-area">
-      <v-file-input
+      <!-- <v-file-input
         v-if="!sessionId"
         label="Upload a plant photo to start..."
         variant="outlined"
@@ -32,10 +32,9 @@
         :loading="isLoading"
         :disabled="isLoading"
         @change="handleFileUpload"
-      ></v-file-input>
+      ></v-file-input> -->
 
       <v-textarea
-        v-if="sessionId"
         v-model="userInput"
         class="message-input"
         rows="2"
@@ -47,7 +46,6 @@
       ></v-textarea>
 
       <v-btn
-        v-if="sessionId"
         @click="sendMessage"
         color="primary"
         :disabled="isLoading || !userInput.trim()"
@@ -148,6 +146,7 @@ const handleFileUpload = async (event: Event) => {
 
 // Function to handle follow-up text messages
 const sendMessage = async () => {
+  sessionId.value = "2";
   if (!userInput.value.trim() || isLoading.value || !sessionId.value) return;
 
   const messageText = userInput.value;
