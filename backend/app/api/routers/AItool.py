@@ -1,15 +1,38 @@
-# app/api/routers/timelines.py
 from fastapi import APIRouter, File, UploadFile, HTTPException, Form, Depends
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from app.api import deps
 from app import crud
 from typing import Dict, Optional
-# Import the Pydantic model too
-from app.services.timeline_service import generate_care_timeline, CareTimeline, convert_periods_to_dates
+from app.services.timeline_service import (
+    generate_care_timeline,
+    CareTimeline,
+    convert_periods_to_dates,
+)
 from app.services.image_analysis_service import analyze_vegetable_image_and_advise
+from app.services.vegetable_filter import filter_vegetable_by_criteria
 
 
 router = APIRouter()
+
+
+class UserCriteria(BaseModel):
+    criteria: str
+
+
+@router.post("/filter-vegetables")
+def filter_vegetables(userCriteria: UserCriteria, db: Session = Depends(deps.get_db)):
+    print("working?")
+    vegetable_list = crud.crud_vegetable.get_vegetables(db=db)
+    print(vegetable_list)
+
+    if not vegetable_list:
+        raise HTTPException(status_code=404, detail="No vegetables found in database")
+    print(userCriteria.criteria)
+    filtered_vegetables = filter_vegetable_by_criteria(
+        userCriteria.criteria, vegetable_list
+    )
+    return filtered_vegetables
 
 
 @router.get("/generate-live/{vegetable_id}", response_model=CareTimeline)
@@ -19,8 +42,7 @@ def generate_live_timeline(vegetable_id: int, db: Session = Depends(deps.get_db)
     Does NOT save the result to the database.
     """
     # 1. Get the vegetable and its materials from the DB
-    vegetable = crud.crud_vegetable.get_vegetable(
-        db, vegetable_id=vegetable_id)
+    vegetable = crud.crud_vegetable.get_vegetable(db, vegetable_id=vegetable_id)
     if not vegetable:
         raise HTTPException(status_code=404, detail="Vegetable not found")
 
@@ -42,12 +64,11 @@ def get_timeline_dates(progress_id: int, db: Session = Depends(deps.get_db)):
     for a user's plant progress.
     """
     # 1. Get the user's plant progress from the DB
-    progress = crud.crud_progress.get_progress_by_id(
-        db, progress_id=progress_id)
+    progress = crud.crud_progress.get_progress_by_id(db, progress_id=progress_id)
     if not progress or not progress.startDate or not progress.expectedHarvestDate:
         raise HTTPException(
             status_code=404,
-            detail="Progress entry with start and harvest dates not found."
+            detail="Progress entry with start and harvest dates not found.",
         )
 
     # 2. Get the vegetable and its materials to generate the periods
@@ -59,7 +80,7 @@ def get_timeline_dates(progress_id: int, db: Session = Depends(deps.get_db)):
     timeline_events = convert_periods_to_dates(
         periods=ai_periods,
         start_date=progress.startDate.date(),  # Use .date() to be safe
-        harvest_date=progress.expectedHarvestDate
+        harvest_date=progress.expectedHarvestDate,
     )
 
     return timeline_events
@@ -68,8 +89,7 @@ def get_timeline_dates(progress_id: int, db: Session = Depends(deps.get_db)):
 # This means the full path will be /image-analysis/
 @router.post("/image_analysis")
 async def analyze_image_endpoint(
-    file: UploadFile = File(...),
-    question: Optional[str] = Form(None)
+    file: UploadFile = File(...), question: Optional[str] = Form(None)
 ) -> str:
     """
     Analyzes an uploaded image of a vegetable plant and provides care advice.
@@ -77,19 +97,19 @@ async def analyze_image_endpoint(
     """
     if file.content_type not in ["image/jpeg", "image/png"]:
         raise HTTPException(
-            400, detail="Invalid file type. Only JPEG and PNG are allowed.")
+            400, detail="Invalid file type. Only JPEG and PNG are allowed."
+        )
 
     if file.size is not None and file.size > 10_000_000:
-        raise HTTPException(
-            400, detail="File too large. Maximum size is 10MB.")
+        raise HTTPException(400, detail="File too large. Maximum size is 10MB.")
 
     try:
         contents = await file.read()
         analysis_result = await analyze_vegetable_image_and_advise(
-            image_content=contents,
-            question=question
+            image_content=contents, question=question
         )
         return analysis_result["analysis"]
     except Exception as e:
         raise HTTPException(
-            500, detail=f"An error occurred while processing the image: {str(e)}")
+            500, detail=f"An error occurred while processing the image: {str(e)}"
+        )

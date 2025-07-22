@@ -28,19 +28,12 @@ class FilteredVegetableList(BaseModel):
 def filter_vegetable_by_criteria(
     user_criteria: str, vegetables: List[schemas.Vegetable]
 ) -> List[FilteredVegetable]:
-    vegetable_list = "\n".join(
-        [
-            (
-                (
-                    f"ID: {vegetable.id}, Name: {vegetable.name}, "
-                    f"Sunlight: {vegetable.amount_of_sunlight}, "
-                    f"Watering: {vegetable.watering_frequency_formatted}, "
-                    f"Harvest Time: {vegetable.estimated_harvest_time_formatted}"
-                )
-                for vegetable in vegetables
-            )
-        ]
-    )
+    vegetable_list = ""
+
+    for vegetable in vegetables:
+        vegetable_list += f"ID: {vegetable.id}, Name:{vegetable.name}, Amount of Sunlight: {vegetable.amount_of_sunlight}, Watering frequency: {vegetable.watering_frequency},Estimated Harvest Time: {vegetable.estimated_harvest_time}\n"
+
+    print(vegetable_list)
 
     parser = JsonOutputParser(pydantic_object=FilteredVegetableList)
 
@@ -50,7 +43,7 @@ def filter_vegetable_by_criteria(
                 "system",
                 """You are an expert vegetable garden assistant.
                 A user will give you a requirement and a list of available vegetables.
-                Your job is to analyze the user's requirement and return a list of vegetable objects (including their id and name) that are a good fit.
+                Your job is to analyze the user's requirement and return a list of vegetables that are a good fit.
                 Base your answer *only* on the provided list of vegetables.
                 If no vegetables in the list are a good fit, return an empty list.
 
@@ -74,5 +67,7 @@ def filter_vegetable_by_criteria(
             "format_instructions": parser.get_format_instructions(),
         }
     )
+
+    print(response)
 
     return response.get("vegetables", [])
