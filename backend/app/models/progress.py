@@ -16,11 +16,9 @@ class UserVegetableProgress(Base):
     expectedHarvestDate = Column(Date, nullable=True)
     lastCheckup = Column(Date, nullable=True)
     checkUpNotes = Column(Text, nullable=True)
-    chat_session_id = Column(String, nullable=True, unique=True)
 
     user = relationship("User", back_populates="user_vegetable_progress")
-    vegetable = relationship(
-        "Vegetable", back_populates="user_vegetable_progress")
+    vegetable = relationship("Vegetable", back_populates="user_vegetable_progress")
 
     def __repr__(self):
         return (
