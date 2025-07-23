@@ -1,3 +1,4 @@
+<!-- userVegetableImageUpload.vue -->
 <template>
   <div class="mb-5" v-if="vegetableImage != null">
     <h1>You've added a photo of your kangkung</h1>
