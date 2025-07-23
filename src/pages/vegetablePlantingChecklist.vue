@@ -1,50 +1,69 @@
 <template>
-  <section id="checklist" class="mb-4">
+  <v-row>
+    <!-- Column 1 -->
+    <v-col cols="5" id="selected-vegetable">
+      <div class="sticky-card">
+        <VegetableChecklistCard :vegetable-image-url="selectedVegetable?.image_url"
+          :vegetable-name="selectedVegetable?.name" :vegetable-id="selectedVegetable?.id"
+          :estimated-harvest-time="selectedVegetable?.estimated_harvest_time_formatted"
+          :watering-frequency="selectedVegetable?.watering_frequency_formatted"
+          :amount-of-sunlight="selectedVegetable?.amount_of_sunlight" width="360">
+        </VegetableChecklistCard>
+      </div>
+    </v-col>
 
-    <div class="instructions mb-4">
-      <h2 class="text-center mb-3">Let's get ready to grow</h2>
-      <p>
-        Below is a checklist of materials you’ll need to get ready before we
-        start. Check each item off the list if you have them. When you’re ready,
-        tap on the button to proceed.
-      </p>
-    </div>
+    <!-- Column 2 -->
+    <!-- Instructions -->
+    <v-col cols="7" id="planting-guide">
+      <div class="instructions mb-4">
+        <h1 class="mb-4">Ready to start? </h1>
+        <p>
+          Grab these items, then tap 'Proceed'!
+        </p>
+      </div>
 
-    <section id="materials-needed" class="mb-6">
-      <v-container class="pa-0 mb-4">
-        <ChecklistItemCard v-for="material in uniqueMaterials" :key="material.id"
+      <!-- Materials -->
+      <div class="what-you-need">
+        <h2 class="mb-4">What you'll need:</h2>
+        <ChecklistItemCard v-for=" material in uniqueMaterials" :key="material.id"
           :materialImageUrl="material.image || 'https://placehold.co/40@3x.png'" :materialName="material.name"
           :materialDescription="material.description">
         </ChecklistItemCard>
-      </v-container>
-    </section>
+      </div>
 
-      <RouterLink :to="`/calendar`">
-        <CallToActionButton button-text="I'm ready to plant"></CallToActionButton>
-      </RouterLink>
-    </section>
-
-    <section id="where-to-buy">
-      <h3 class="mb-3">Where to buy</h3>
-      <div class="item-to-buy">
+      <!-- Where To Buy -->
+      <div class="where-to-buy">
+        <h2 class="mb-4">Where to buy:</h2>
         <div class="item-category d-flex flex-row align-center ga-4">
           <image src="https://placehold.co/60x40.png"></image>
-          <h4>Item Name</h4>
         </div>
-        <WhereToBuyCard></WhereToBuyCard>
+        <WhereToBuyCard class="mb-4"></WhereToBuyCard>
       </div>
-    </section>
+
+      <!-- Calendar -->
+      <div>
+        <h2 class="mb-4"> When would you like to start planting?</h2>
+        <Calendar class="mb-5"></Calendar>
+      </div>
+
+      <!-- Call to Action Button -->
+      <CallToActionButton :to="`/dashboard`" class="mb-4">
+        I'm ready to plant
+      </CallToActionButton>
+
+    </v-col>
+  </v-row>
 </template>
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
 import { computed, onMounted } from "vue";
 import { useVegetablesStore } from "@/stores/vegetable";
-import CallToActionButton from "../components/CallToActionButton.vue";
-import ChecklistItemCard from "../components/ChecklistItemCard.vue";
-import WhereToBuyCard from "../components/WhereToBuyCard.vue";
+import VegetableChecklistCard from "@/components/VegetableChecklistCard.vue";
+import Calendar from "@/components/Calendar.vue";
 
 const vegetableStore = useVegetablesStore();
+const { selectedVegetable } = storeToRefs(vegetableStore);
 
 onMounted(async () => {
   if (!vegetableStore.materials.length) {
@@ -62,3 +81,12 @@ const uniqueMaterials = computed(() =>
     : []
 );
 </script>
+
+<style scoped>
+.sticky-card {
+  position: sticky;
+  top: 32px;
+  /* Adjust as needed for your header */
+  z-index: 2;
+}
+</style>

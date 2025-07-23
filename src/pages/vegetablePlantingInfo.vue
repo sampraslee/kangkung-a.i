@@ -1,20 +1,20 @@
 <template>
   <v-row>
     <v-col cols="5" id="selected-vegetable">
-      <VegetableCard
-        :vegetable-image-url="selectedVegetable.image_url"
-        :vegetable-name="selectedVegetable.name"
-        :vegetable-id="selectedVegetable.id"
-        :estimated-harvest-time="
-          selectedVegetable.estimated_harvest_time_formatted
-        "
-        :watering-frequency="selectedVegetable.watering_frequency_formatted"
-        :amount-of-sunlight="selectedVegetable.amount_of_sunlight"
-        :button-route="`/vegetablePlantingChecklist/`"
-        width="360"
-      >
-        <template #button-text>Let's grow</template>
-      </VegetableCard>
+      <div class="sticky-card">
+        <VegetableCard
+          :vegetable-image-url="selectedVegetable?.image_url"
+          :vegetable-name="selectedVegetable?.name"
+          :vegetable-id="selectedVegetable?.id"
+          :estimated-harvest-time="selectedVegetable?.estimated_harvest_time_formatted"
+          :watering-frequency="selectedVegetable?.watering_frequency_formatted"
+          :amount-of-sunlight="selectedVegetable?.amount_of_sunlight"
+          :button-route="`/vegetablePlantingChecklist/`"
+          width="360"
+        >
+          <template #button-text>Let's grow</template>
+        </VegetableCard>
+      </div>
     </v-col>
     <v-col cols="7" id="planting-guide">
       <div class="how-to-grow">
@@ -85,3 +85,11 @@ const uniqueMaterials = computed(() =>
     : []
 );
 </script>
+
+<style scoped>
+.sticky-card {
+  position: sticky;
+  top: 32px; /* Adjust as needed for your header */
+  z-index: 2;
+}
+</style>
