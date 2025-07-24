@@ -18,8 +18,7 @@ class UserVegetableProgress(Base):
     checkUpNotes = Column(Text, nullable=True)
 
     user = relationship("User", back_populates="user_vegetable_progress")
-    vegetable = relationship(
-        "Vegetable", back_populates="user_vegetable_progress")
+    vegetable = relationship("Vegetable", back_populates="user_vegetable_progress")
 
     def __repr__(self):
         return (

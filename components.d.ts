@@ -13,6 +13,7 @@ declare module 'vue' {
     ChecklistItemCard: typeof import('./src/components/ChecklistItemCard.vue')['default']
     GrowingVegetableCard: typeof import('./src/components/GrowingVegetableCard.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
+    MarkdownRenderer: typeof import('./src/components/MarkdownRenderer.vue')['default']
     MaterialsCard: typeof import('./src/components/MaterialsCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
