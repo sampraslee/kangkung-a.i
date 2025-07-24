@@ -10,14 +10,21 @@ create_db_and_tables()
 app = FastAPI(title="Kangkung AI API")
 
 # Add CORS middleware
+origins = [
+    "http://localhost",
+    "http://localhost:8080",
+    "http://localhost:5173",  # Make sure your Vue dev server port is here
+    "http://127.0.0.1:5173",
+    "*",  # The wildcard allows all origins
+]
+
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=origins,
     allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
+    allow_methods=["*"],  # Allows all methods (GET, POST, etc.)
+    allow_headers=["*"],  # Allows all headers
 )
-
 # Include routers
 app.include_router(users.router, prefix="/users", tags=["Users"])
 app.include_router(vegetables.router, tags=["Vegetables & Progress"])
