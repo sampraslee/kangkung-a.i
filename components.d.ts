@@ -9,6 +9,7 @@ export {}
 declare module 'vue' {
   export interface GlobalComponents {
     AppFooter: typeof import('./src/components/AppFooter.vue')['default']
+    Calendar: typeof import('./src/components/Calendar.vue')['default']
     CallToActionButton: typeof import('./src/components/CallToActionButton.vue')['default']
     ChecklistItemCard: typeof import('./src/components/ChecklistItemCard.vue')['default']
     GrowingVegetableCard: typeof import('./src/components/GrowingVegetableCard.vue')['default']
@@ -17,6 +18,7 @@ declare module 'vue' {
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     VegetableCard: typeof import('./src/components/VegetableCard.vue')['default']
+    VegetableChecklistCard: typeof import('./src/components/VegetableChecklistCard.vue')['default']
     VideoCard: typeof import('./src/components/VideoCard.vue')['default']
     WeatherNoti: typeof import('./src/components/WeatherNoti.vue')['default']
     WhereToBuyCard: typeof import('./src/components/WhereToBuyCard.vue')['default']
