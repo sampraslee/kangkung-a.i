@@ -16,6 +16,7 @@ declare module 'vue' {
     InfoCard: typeof import('./src/components/InfoCard.vue')['default']
     MarkdownRenderer: typeof import('./src/components/MarkdownRenderer.vue')['default']
     MaterialsCard: typeof import('./src/components/MaterialsCard.vue')['default']
+    PlantNewVegetableCard: typeof import('./src/components/PlantNewVegetableCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
     RouterView: typeof import('vue-router')['RouterView']
     ToDoCard: typeof import('./src/components/ToDoCard.vue')['default']
