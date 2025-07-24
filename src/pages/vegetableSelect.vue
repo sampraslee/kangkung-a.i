@@ -6,17 +6,38 @@
       Not sure what to grow? Let us know what you’re looking for.
     </p>
     <v-text-field
+      append-icon="mdi-send-circle"
       bg-color="white"
+      clearable
       label="Ask a question"
       icon-color="primary"
       variant="outlined"
       rounded="xl"
       prepend-inner-icon="mdi-creation"
+      v-model="userInput"
+      @click:append="filterVegetables(userInput)"
+      @keydown.enter="filterVegetables(userInput)"
     ></v-text-field>
   </section>
   <section id="vegetable-list">
     <v-container class="pa-0 ma-0 d-flex flex-row flex-wrap ga-5" fluid="true">
       <VegetableCard
+        v-if="filteredVegetables.length > 0"
+        v-for="(vegetable, id) in filteredVegetables"
+        :vegetable-image-url="vegetable.image_url"
+        :vegetable-name="vegetable.name"
+        :vegetable-id="vegetable.id"
+        :estimated-harvest-time="vegetable.estimated_harvest_time_formatted"
+        :watering-frequency="vegetable.watering_frequency_formatted"
+        :amount-of-sunlight="vegetable.amount_of_sunlight"
+        :button-route="`/vegetablePlantingInfo/`"
+        @card-button-clicked="handleHowToGrowClick(vegetable.id)"
+        width="360"
+      >
+        <template #button-text> How to grow? </template>
+      </VegetableCard>
+      <VegetableCard
+        v-else
         v-for="(vegetable, id) in vegetables"
         :vegetable-image-url="vegetable.image_url"
         :vegetable-name="vegetable.name"
@@ -41,7 +62,9 @@ import { storeToRefs } from "pinia";
 import { useVegetablesStore } from "@/stores/vegetable";
 
 const vegetableStore = useVegetablesStore();
-const { vegetables } = storeToRefs(vegetableStore);
+const { vegetables, filteredVegetables } = storeToRefs(vegetableStore);
+
+const userInput = ref("");
 
 onMounted(() => {
   console.log("on mount");
@@ -51,5 +74,9 @@ onMounted(() => {
 function handleHowToGrowClick(vegetableID) {
   // Only save the vegetableId in the selectedVegetable state
   vegetableStore.getSelectedVegetable(vegetableID);
+}
+
+function filterVegetables(userInput) {
+  vegetableStore.filterVegetablesByUserCriteria(userInput);
 }
 </script>
