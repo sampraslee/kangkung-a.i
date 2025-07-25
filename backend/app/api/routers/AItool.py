@@ -1,15 +1,37 @@
-# app/api/routers/timelines.py
 from fastapi import APIRouter, File, UploadFile, HTTPException, Form, Depends
+from pydantic import BaseModel
 from sqlalchemy.orm import Session
 from app.api import deps
 from app import crud
-from typing import Dict, Optional
-# Import the Pydantic model too
-from app.services.timeline_service import generate_care_timeline, CareTimeline, convert_periods_to_dates
-from app.services.image_analysis_service import analyze_vegetable_image_and_advise
-
+from app.services.timeline_service import (
+    generate_care_timeline,
+    CareTimeline,
+    convert_periods_to_dates,
+)
+from app.services.vegetable_filter import filter_vegetable_by_criteria
+from app.services import chat_service
+from datetime import datetime
 
 router = APIRouter()
+
+
+class UserCriteria(BaseModel):
+    criteria: str
+
+
+@router.post("/filter-vegetables")
+def filter_vegetables(userCriteria: UserCriteria, db: Session = Depends(deps.get_db)):
+    print("working?")
+    vegetable_list = crud.crud_vegetable.get_vegetables(db=db)
+    print(vegetable_list)
+
+    if not vegetable_list:
+        raise HTTPException(status_code=404, detail="No vegetables found in database")
+    print(userCriteria.criteria)
+    filtered_vegetables = filter_vegetable_by_criteria(
+        userCriteria.criteria, vegetable_list
+    )
+    return filtered_vegetables
 
 
 @router.get("/generate-live/{vegetable_id}", response_model=CareTimeline)
@@ -19,8 +41,7 @@ def generate_live_timeline(vegetable_id: int, db: Session = Depends(deps.get_db)
     Does NOT save the result to the database.
     """
     # 1. Get the vegetable and its materials from the DB
-    vegetable = crud.crud_vegetable.get_vegetable(
-        db, vegetable_id=vegetable_id)
+    vegetable = crud.crud_vegetable.get_vegetable(db, vegetable_id=vegetable_id)
     if not vegetable:
         raise HTTPException(status_code=404, detail="Vegetable not found")
 
@@ -42,12 +63,11 @@ def get_timeline_dates(progress_id: int, db: Session = Depends(deps.get_db)):
     for a user's plant progress.
     """
     # 1. Get the user's plant progress from the DB
-    progress = crud.crud_progress.get_progress_by_id(
-        db, progress_id=progress_id)
+    progress = crud.crud_progress.get_progress_by_id(db, progress_id=progress_id)
     if not progress or not progress.startDate or not progress.expectedHarvestDate:
         raise HTTPException(
             status_code=404,
-            detail="Progress entry with start and harvest dates not found."
+            detail="Progress entry with start and harvest dates not found.",
         )
 
     # 2. Get the vegetable and its materials to generate the periods
@@ -59,37 +79,101 @@ def get_timeline_dates(progress_id: int, db: Session = Depends(deps.get_db)):
     timeline_events = convert_periods_to_dates(
         periods=ai_periods,
         start_date=progress.startDate.date(),  # Use .date() to be safe
-        harvest_date=progress.expectedHarvestDate
+        harvest_date=progress.expectedHarvestDate,
     )
 
     return timeline_events
 
 
-# This means the full path will be /image-analysis/
-@router.post("/image_analysis")
-async def analyze_image_endpoint(
-    file: UploadFile = File(...),
-    question: Optional[str] = Form(None)
-) -> str:
+@router.post(
+    "/analyze-image-chat/{progress_id}", response_model=chat_service.AnalysisResponse
+)
+async def analyze_image_and_save(
+    progress_id: int, db: Session = Depends(deps.get_db), file: UploadFile = File(...)
+):
     """
-    Analyzes an uploaded image of a vegetable plant and provides care advice.
-    Optionally accepts a specific question from the user.
+    Analyzes a plant image for a specific progress entry,
+    and saves the new analysis to the database.
     """
-    if file.content_type not in ["image/jpeg", "image/png"]:
-        raise HTTPException(
-            400, detail="Invalid file type. Only JPEG and PNG are allowed.")
+    progress = crud.crud_progress.get_progress_by_id(db, progress_id=progress_id)
+    if not progress:
+        raise HTTPException(status_code=404, detail="User progress not found")
 
-    if file.size is not None and file.size > 10_000_000:
-        raise HTTPException(
-            400, detail="File too large. Maximum size is 10MB.")
+    contents = await file.read()
+    previous_notes = progress.checkUpNotes
 
-    try:
-        contents = await file.read()
-        analysis_result = await analyze_vegetable_image_and_advise(
-            image_content=contents,
-            question=question
+    vegetable_name = progress.vegetable.name
+
+    analysis_result = await chat_service.analyze_plant_image(
+        image_bytes=contents,
+        vegetable_name=vegetable_name,
+        previous_notes=previous_notes,
+    )
+
+    today_date = datetime.now().strftime("%Y-%m-%d %H:%M")
+    new_log_entry = (
+        f"\n\n--- Check-up on {today_date} ---\n\n"
+        f"[USER]: (Uploaded an image for analysis of {vegetable_name})\n\n"
+        f"[AI]:\n{analysis_result}"
+    )
+
+    if progress.checkUpNotes:
+        progress.checkUpNotes += new_log_entry
+    else:
+        progress.checkUpNotes = new_log_entry.strip()
+
+    db.commit()
+
+    return {"session_id": str(progress_id), "analysis": analysis_result}
+
+
+@router.post("/continue-chat/{progress_id}", response_model=chat_service.ChatResponse)
+async def continue_chat_session_and_save(
+    progress_id: int,
+    request: chat_service.ChatRequest,
+    db: Session = Depends(deps.get_db),
+):
+    """
+    Continues a chat based on the full history from checkUpNotes
+    and saves the new turn to the database.
+    """
+    progress = crud.crud_progress.get_progress_by_id(db, progress_id=progress_id)
+    if not progress or not progress.checkUpNotes:
+        raise HTTPException(
+            status_code=404, detail="No chat history found for this plant."
         )
-        return analysis_result["analysis"]
-    except Exception as e:
-        raise HTTPException(
-            500, detail=f"An error occurred while processing the image: {str(e)}")
+
+    vegetable_name = progress.vegetable.name
+    ai_response = await chat_service.continue_chat(
+        history=progress.checkUpNotes,
+        user_input=request.user_input,
+        vegetable_name=vegetable_name,
+    )
+    new_log_entry = f"\n\n[USER]: {request.user_input}\n\n" f"[AI]:\n{ai_response}"
+
+    progress.checkUpNotes += new_log_entry
+    db.commit()
+
+    return {"ai_response": ai_response}
+
+
+@router.post(
+    "/summarize-chat/{progress_id}", response_model=chat_service.SummaryResponse
+)
+async def summarize_chat_history(progress_id: int, db: Session = Depends(deps.get_db)):
+    """
+    Summarizes the entire chat history for a plant and replaces the
+    checkUpNotes with the summary.
+    """
+    progress = crud.crud_progress.get_progress_by_id(db, progress_id=progress_id)
+    if not progress or not progress.checkUpNotes:
+        raise HTTPException(status_code=404, detail="No notes found to summarize.")
+
+    # 1. Call the summarization service with the current notes
+    summary = await chat_service.summarize_notes(notes=progress.checkUpNotes)
+
+    # 2. Replace the old notes with the new summary in the database
+    progress.checkUpNotes = summary
+    db.commit()
+
+    return {"summary": summary}
