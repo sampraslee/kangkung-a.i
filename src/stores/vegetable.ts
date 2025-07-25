@@ -4,6 +4,7 @@ import { defineStore } from "pinia";
 export const useVegetablesStore = defineStore("vegetable", {
   state: () => ({
     vegetables: [],
+    usersVegetables: null,
     materials: [],
     selectedVegetable: null,
     filteredVegetables: [],
@@ -56,6 +57,36 @@ export const useVegetablesStore = defineStore("vegetable", {
       }
     },
 
+    // Select a vegetable by ID and fetch its details
+    async getSelectedVegetable(vegetableId: number | string) {
+      const url = `http://127.0.0.1:8000/vegetables/${vegetableId}`;
+      try {
+        const response = await axios.get(url);
+        this.selectedVegetable = response.data;
+        console.log(this.selectedVegetable);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    },
+
+    // Get a users vegetables
+    async getUserVegetables(userID: number) {
+      let userProgress = null;
+      let userVegetableID = null;
+      const userProgressURL = `http://127.0.0.1:8000/progress/${userID}`;
+
+      try {
+        const response = await axios.get(userProgressURL);
+        console.log(response.data);
+        userProgress = response.data;
+        userVegetableID = userProgress[0].vegetable_id;
+        this.usersVegetables = await this.getSelectedVegetable(userVegetableID);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+      console.log(this.usersVegetables);
+    },
+
     // Fetch all materials
     async getMaterials() {
       const url = "http://127.0.0.1:8000/materials";
@@ -64,18 +95,6 @@ export const useVegetablesStore = defineStore("vegetable", {
         const response = await axios.get(url);
         this.materials = response.data;
         console.log(this.materials);
-      } catch (error: any) {
-        console.log(error.message);
-      }
-    },
-
-    // Select a vegetable by ID and fetch its details
-    async getSelectedVegetable(vegetableId: number | string) {
-      const url = `http://127.0.0.1:8000/vegetables/${vegetableId}`;
-      try {
-        const response = await axios.get(url);
-        this.selectedVegetable = response.data;
-        console.log(this.selectedVegetable);
       } catch (error: any) {
         console.log(error.message);
       }
