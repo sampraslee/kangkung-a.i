@@ -1,16 +1,21 @@
 <template>
   <section id="user-welcome">
-    <h1>Good afternoon, User</h1>
+    <h1 class="text-primary900">Good afternoon, User</h1>
     <p>Welcome back, let's get you up to speed with your growing vegetables</p>
   </section>
-  <hr />
+  <v-divider
+    color="primary900"
+    thickness="0.75"
+    opacity="1"
+    class="mb-5 mt-5"
+  ></v-divider>
   <section id="dashboard">
     <v-row>
       <v-col col="6">
         <ToDoCard></ToDoCard>
       </v-col>
       <v-col col="6">
-        <InfoCard></InfoCard>
+        <InfoCard fill-height="100"></InfoCard>
       </v-col>
     </v-row>
     <v-row>
