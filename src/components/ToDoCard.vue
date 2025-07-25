@@ -4,7 +4,7 @@
     border="none"
     elevation="0"
   >
-    <v-img src="/public/images/checklist.png" width="180" height="180"></v-img>
+    <v-img src="/public/images/checklist.png" width="180"></v-img>
     <div class="todos">
       <h3 class="text-primary900">Your todos</h3>
       <div class="today-todos">
