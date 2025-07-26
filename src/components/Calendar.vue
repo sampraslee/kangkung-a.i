@@ -1,24 +1,24 @@
 <template>
-    <v-container class="pa-0">
-        <v-date-picker
-            header-color="primary"
-            bg-color="accent"
-            color="secondary"
-            border="sm"
-            rounded="lg"
-            width="100%"
-            v-model="selectedDate"
-            :min="currentDate"
-            @update:model-value="getPlantingTimeline"
-        ></v-date-picker>
-    </v-container>
+  <v-container class="pa-0">
+    <v-date-picker
+      header-color="primary"
+      bg-color="accent"
+      color="secondary"
+      border="sm"
+      rounded="lg"
+      width="100%"
+      v-model="selectedDate"
+      :min="currentDate"
+      @update:model-value="getPlantingTimeline"
+    ></v-date-picker>
+  </v-container>
 
-    <v-container class="pa-0 mt-5 mb-5" v-if="!selectedDate">
-        <p>
-            Select a date and we will show you a timeline of your future planting
-            journey.
-        </p>
-    </v-container>
+  <v-container class="pa-0 mt-5 mb-5" v-if="!selectedDate">
+    <p>
+      Select a date and we will show you a timeline of your future planting
+      journey.
+    </p>
+  </v-container>
 
     <v-container class="pa-0 mt-5 mb-5" v-else>
         <h2>Important Dates</h2>
@@ -66,18 +66,18 @@ currentDate.setDate(currentDate.getDate() - 1); //grey-out
 const selectedDate = ref<Date | null>(null);
 
 const calculateEstimatedHarvestDate = computed(() => {
-    if (!selectedDate.value) return null;
-    const estimatedHarvestDate = new Date(selectedDate.value);
-    estimatedHarvestDate.setSeconds(
-        selectedDate.value.getSeconds() +
-        selectedVegetable.estimated_harvest_time_in_seconds
-    );
-    return estimatedHarvestDate;
+  if (!selectedDate.value) return null;
+  const estimatedHarvestDate = new Date(selectedDate.value);
+  estimatedHarvestDate.setSeconds(
+    selectedDate.value.getSeconds() +
+      selectedVegetable.estimated_harvest_time_in_seconds
+  );
+  return estimatedHarvestDate;
 });
 
 async function getPlantingTimeline() {
-    if (selectedDate.value) {
-        await progressStore.getPlantingTimeline();
-    }
+  if (selectedDate.value) {
+    await progressStore.getPlantingTimeline();
+  }
 }
 </script>

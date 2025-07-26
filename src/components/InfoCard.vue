@@ -6,7 +6,7 @@
   >
     <v-img src="/public/images/info.png" width="180"></v-img>
     <div class="information">
-      <h3>For your information</h3>
+      <h3 class="text-primary900">For your information</h3>
       <p>
         <v-list-item-subtitle v-if="loading">Loading...</v-list-item-subtitle>
         <v-list-item-subtitle v-else-if="error">{{ error }}</v-list-item-subtitle>

@@ -7,6 +7,7 @@ export const useVegetablesStore = defineStore("vegetable", {
     usersVegetables: null,
     materials: [],
     selectedVegetable: null,
+    filteredVegetables: [],
     selectedMaterial: null,
   }),
 
@@ -94,6 +95,32 @@ export const useVegetablesStore = defineStore("vegetable", {
         const response = await axios.get(url);
         this.materials = response.data;
         console.log(this.materials);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    },
+
+    async filterVegetablesByUserCriteria(userCriteria: string) {
+      const url = `http://127.0.0.1:8000/AItool/filter-vegetables`;
+      this.filteredVegetables = [];
+      try {
+        const response = await axios.post(url, { criteria: userCriteria });
+        const results = response.data;
+        console.log(typeof results);
+        console.log(typeof this.vegetables);
+        console.log("Isaac was here");
+
+        results.forEach((filteredVegetable) => {
+          const matchingVegetable = this.vegetables.find(
+            (vege) => vege.id === filteredVegetable.id
+          );
+          if (matchingVegetable) {
+            console.log(matchingVegetable);
+            this.filteredVegetables.push(matchingVegetable);
+          }
+        });
+
+        console.log(this.filteredVegetables);
       } catch (error: any) {
         console.log(error.message);
       }
