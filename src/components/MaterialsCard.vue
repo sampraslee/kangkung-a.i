@@ -1,14 +1,13 @@
 <template>
-  <v-card class="d-flex ga-4 pa-4 rounded-lg mb-4 align-center" elevation="0">
-    <v-img
-      :src="materialImageUrl"
-      :width="100"
-      :height="100"
-      class="material-img flex-shrink-0"
-      cover
-    />
+  <v-card class="d-flex ga-4 pa-4 rounded-lg mb-4 align-start" elevation="0">
+    <v-avatar size="100" rounded="lg" class="bg-grey-lighten-4 material-img flex-shrink-0">
+      <v-img
+        :src="materialImageUrl"
+        cover
+      />
+    </v-avatar>
     <div class="material-info d-flex flex-column">
-      <v-card-title class="pa-0">{{ materialName }}</v-card-title>
+      <v-card-title class="font-weight-bold pa-0">{{ materialName }}</v-card-title>
       <v-card-text class="pa-0"> {{ materialDescription }}</v-card-text>
     </div>
   </v-card>
@@ -30,3 +29,11 @@ const props = defineProps({
   },
 });
 </script>
+
+<style scoped>
+.material-img {
+  /* Ensures the avatar and image are always the same size */
+  width: 100px;
+  height: 100px;
+}
+</style>

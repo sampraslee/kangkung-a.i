@@ -1,48 +1,57 @@
 <template>
   <v-card
-    class="pa-6 ga-4 border-sm rounded-lg d-flex flex-column"
+    class="pa-6 ga-4 border-sm rounded-lg d-flex flex-column vegetable-card"
     border="none"
     elevation="0"
   >
-    <v-img :src="vegetableImageUrl" width="180"></v-img>
+    <div class="d-flex justify-center">
+      <v-avatar size="180" rounded="lg" class="bg-grey-lighten-4">
+        <v-img :src="vegetableImageUrl" cover></v-img>
+      </v-avatar>
+    </div>
 
-    <v-container class="vegetableInfo pa-0 ga-3 d-flex flex-column">
-      <v-card-title class="font-weight-bold pa-0">
-        {{ vegetableName }}
-      </v-card-title>
-      <div class="d-inline-flex align-center ga-2">
-        <p>Harvest in:</p>
-        <v-chip
-          color="primary"
-          prepend-icon="mdi-calendar-clock"
-          size="large"
-          rounded="pill"
-        >
-          {{ estimatedHarvestTime }}
-        </v-chip>
+    <v-container class="vegetableInfo pa-0 ga-3 d-flex flex-column flex-grow-1">
+      <div class="vegetable-title-block">
+        <v-card-title class="font-weight-bold pa-0 vegetable-title">
+          {{ vegetableName }}
+        </v-card-title>
       </div>
-      <div class="d-inline-flex align-center ga-2">
-        <p>Watering:</p>
-        <v-chip
-          prepend-icon="mdi-water-outline"
-          color="primary"
-          size="large"
-          rounded="pill"
-        >
-          {{ wateringFrequency }}
-        </v-chip>
+      <div class="details-list d-flex flex-column flex-grow-1 justify-space-between">
+        <div class="detail-row d-inline-flex align-center ga-2">
+          <p class="detail-label">Harvest in:</p>
+          <v-chip
+            color="primary"
+            prepend-icon="mdi-calendar-clock"
+            size="large"
+            rounded="pill"
+          >
+            {{ estimatedHarvestTime }}
+          </v-chip>
+        </div>
+        <div class="detail-row d-inline-flex align-center ga-2">
+          <p class="detail-label">Watering:</p>
+          <v-chip
+            prepend-icon="mdi-water-outline"
+            color="primary"
+            size="large"
+            rounded="pill"
+          >
+            {{ wateringFrequency }}
+          </v-chip>
+        </div>
+        <div class="detail-row d-inline-flex align-center ga-2">
+          <p class="detail-label">Sunlight:</p>
+          <v-chip
+            prepend-icon="mdi-weather-sunny"
+            color="primary"
+            size="large"
+            rounded="pill"
+          >
+            {{ amountOfSunlight }}
+          </v-chip>
+        </div>
       </div>
-      <div class="d-inline-flex align-center ga-2">
-        <p>Sunlight:</p>
-        <v-chip
-          prepend-icon="mdi-weather-sunny"
-          color="primary"
-          size="large"
-          rounded="pill"
-        >
-          {{ amountOfSunlight }}
-        </v-chip>
-      </div>
+      <div class="flex-grow-1"></div>
     </v-container>
 
     <CallToActionButton
@@ -76,3 +85,36 @@ function handleHowToGrowClick() {
 
 defineEmits(["card-button-clicked"]);
 </script>
+
+<style scoped>
+.vegetable-card {
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+.vegetable-title-block {
+  min-height: 60px; /* Adjust this value as needed for your design */
+  display: flex;
+  align-items: center;
+}
+.vegetable-title {
+  white-space: normal;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  width: 100%;
+}
+.details-list {
+  min-height: 150px; /* Ensures details block is same height in all cards */
+  justify-content: space-between;
+  flex-grow: 1;
+}
+.detail-row {
+  min-height: 40px; /* Ensures each row is same height */
+  align-items: center;
+}
+.detail-label {
+  margin: 0;
+  min-width: 90px; /* Ensures label width is consistent */
+}
+</style>

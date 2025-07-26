@@ -3,7 +3,7 @@
         <v-img :src="vegetableImageUrl"></v-img>
 
         <v-container class="vegetableInfo pa-0 ga-3 d-flex flex-column">
-            <v-card-title class="font-weight-bold pa-0">
+            <v-card-title class="font-weight-bold text-h5 text-wrap pa-0 vegetable-title text-left">
                 {{ vegetableName }}
             </v-card-title>
             <div class="d-inline-flex align-center ga-2">
