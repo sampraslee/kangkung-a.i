@@ -5,7 +5,7 @@ from langchain_core.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import JsonOutputParser
 from pydantic import BaseModel, Field
 import re
-from datetime import date
+from datetime import date, datetime
 from dateutil.relativedelta import relativedelta
 from typing import List, Dict, Any
 
@@ -138,14 +138,17 @@ def convert_periods_to_dates(
 
         current_date = start_date
         while current_date <= harvest_date:
+
+            # Format the date as: "Day Month Date Year"
+            formatted_date = datetime.strftime(current_date, "%a %b %d %Y")
             # Add the event for the current date
             events.append({
                 "event": event_name,
-                "date": current_date.isoformat()
+                "date": formatted_date
             })
             # Increment to the next event date
             current_date += duration
 
     # Sort all events by date to create a clean timeline
-    sorted_events = sorted(events, key=lambda e: e['date'])
+    sorted_events = sorted(events, key=lambda e: datetime.strptime(e['date'], "%a %b %d %Y"))
     return sorted_events

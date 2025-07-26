@@ -28,16 +28,17 @@
     </p>
   </v-container>
 
-  <v-container class="pa-0 mt-5" v-else>
+   <v-container class="pa-0 mt-5" v-else>
     <h2>Important Dates</h2>
     <v-timeline
-      align="start"
+      align="center"
       direction="vertical"
-      dot-color="primary"
-      side="end"
       truncate-line="both"
     >
-      <v-timeline-item v-if="selectedDate">
+      <v-timeline-item
+        v-if="selectedDate"
+        :align="0 % 2 === 0 ? 'start' : 'end'"
+      >
         <v-sheet border="sm" color="accent" rounded="lg" class="pa-2">
           <p class="font-weight-bold">
             {{ selectedDate.toDateString() }}
@@ -48,6 +49,8 @@
       <v-timeline-item
         v-if="timeline && timeline.length > 0"
         v-for="(step, index) in timeline"
+        :key="index"
+        :align="(index + 1) % 2 === 0 ? 'start' : 'end'"
       >
         <v-sheet border="sm" color="accent" rounded="lg" class="pa-2">
           <p class="font-weight-bold">{{ step.date }}</p>
@@ -56,7 +59,10 @@
           </p>
         </v-sheet>
       </v-timeline-item>
-      <v-timeline-item v-if="calculateEstimatedHarvestDate">
+      <v-timeline-item 
+        v-if="calculateEstimatedHarvestDate"
+        :align="(timeline.length + 1) % 2 === 0 ? 'start' : 'end'"
+      >
         <v-sheet border="sm" color="accent" rounded="lg" class="pa-2">
           <p class="font-weight-bold">
             {{ calculateEstimatedHarvestDate.toDateString() }}
