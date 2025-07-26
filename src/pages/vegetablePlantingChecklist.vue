@@ -7,9 +7,7 @@
           :vegetable-image-url="selectedVegetable?.image_url"
           :vegetable-name="selectedVegetable?.name"
           :vegetable-id="selectedVegetable?.id"
-          :estimated-harvest-time="
-            selectedVegetable?.estimated_harvest_time_formatted
-          "
+          :estimated-harvest-time="selectedVegetable?.estimated_harvest_time_formatted"
           :watering-frequency="selectedVegetable?.watering_frequency_formatted"
           :amount-of-sunlight="selectedVegetable?.amount_of_sunlight"
           width="360"
@@ -22,8 +20,7 @@
     <!-- Instructions -->
     <v-col cols="7" id="planting-guide">
       <div class="instructions mb-4">
-        <h1 class="mb-4">Ready to start?</h1>
-        <p>Grab these items, then tap 'Proceed'!</p>
+        <h1 class="mb-4">Are you ready to start growing?</h1>
       </div>
 
       <!-- Materials -->
@@ -40,12 +37,18 @@
       </div>
 
       <!-- Where To Buy -->
-      <div class="where-to-buy">
+      <div class="where-to-buy mb-5">
         <h2 class="mb-4">Where to buy:</h2>
-        <div class="item-category d-flex flex-row align-center ga-4">
-          <image src="https://placehold.co/60x40.png"></image>
-        </div>
-        <WhereToBuyCard class="mb-4"></WhereToBuyCard>
+        <WhereToBuyCard
+          v-for="(store, index) in stores"
+          :key="index"
+          :store-name="store.name"
+          :store-description="store.description"
+          :store-image="store.img"
+          :store-link="store.link"
+          class="mb-4"
+        >
+        </WhereToBuyCard>
       </div>
 
       <!-- Calendar -->
@@ -68,6 +71,7 @@ import { computed, onMounted } from "vue";
 import { useVegetablesStore } from "@/stores/vegetable";
 import VegetableChecklistCard from "@/components/VegetableChecklistCard.vue";
 import Calendar from "@/components/Calendar.vue";
+import WhereToBuyCard from "@/components/WhereToBuyCard.vue";
 
 const vegetableStore = useVegetablesStore();
 const { selectedVegetable } = storeToRefs(vegetableStore);
@@ -77,6 +81,27 @@ onMounted(async () => {
     await vegetableStore.getMaterials();
   }
 });
+
+const stores = [
+  {
+    name: "Damansara Nursery",
+    description: "Wholesale Plant Nursery",
+    link: "https://maps.app.goo.gl/mmhvppr8CP88adEE9",
+    img: "/images/vegestores/damansara_nursey.png",
+  },
+  {
+    name: "54 Weng Thye Nursery & Landscapes",
+    description: "Plant Nursery",
+    link: "https://maps.app.goo.gl/SSyyVxthNQAtbajb6",
+    img: "/images/vegestores/weng_thye.png",
+  },
+  {
+    name: "Katsura Garden Centre",
+    description: "Plant Nursery",
+    link: "https://maps.app.goo.gl/j5poP3JQsSmRTVdVA",
+    img: "/images/vegestores/katsura.png",
+  },
+];
 
 const selectedVegetableId = computed(
   () => vegetableStore.selectedVegetable?.id
