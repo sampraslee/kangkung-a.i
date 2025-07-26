@@ -6,13 +6,13 @@
       Not sure what to grow? Let us know what you’re looking for.
     </p>
     <v-text-field
-      append-icon="mdi-send-circle"
+      append-inner-icon="mdi-send-circle"
       bg-color="white"
       clearable
       label="Ask a question"
       icon-color="primary"
       variant="outlined"
-      rounded="xl"
+      rounded="lg"
       prepend-inner-icon="mdi-creation"
       v-model="userInput"
       @click:append="filterVegetables(userInput)"
@@ -20,22 +20,36 @@
     ></v-text-field>
   </section>
   <section id="vegetable-list">
-    <v-container class="pa-0 ma-0 d-flex flex-row flex-wrap ga-5 justify-center" fluid="true">
-      <VegetableCard
-        v-for="(vegetable, id) in displayedVegetables"
-        :key="vegetable.id"
-        :vegetable-image-url="vegetable.image_url"
-        :vegetable-name="vegetable.name"
-        :vegetable-id="vegetable.id"
-        :estimated-harvest-time="vegetable.estimated_harvest_time_formatted"
-        :watering-frequency="vegetable.watering_frequency_formatted"
-        :amount-of-sunlight="vegetable.amount_of_sunlight"
-        :button-route="`/vegetablePlantingInfo/`"
-        @card-button-clicked="handleHowToGrowClick(vegetable.id)"
-        width="360"
+    <v-container
+      class="pa-0 ma-0 d-flex flex-row flex-wrap ga-5 justify-center"
+      fluid="true"
+    >
+      <v-progress-circular
+        v-if="vegetableStore.isLoading"
+        color="primary"
+        size="70"
+        indeterminate
       >
-        <template #button-text> Grow This! </template>
-      </VegetableCard>
+        Finding the best vegetables for you...
+      </v-progress-circular>
+      <v-fade-transition v-else group>
+        <VegetableCard
+          v-for="(vegetable, id) in displayedVegetables"
+          :key="vegetable.id"
+          :vegetable-image-url="vegetable.image_url"
+          :vegetable-name="vegetable.name"
+          :vegetable-id="vegetable.id"
+          :estimated-harvest-time="vegetable.estimated_harvest_time_formatted"
+          :watering-frequency="vegetable.watering_frequency_formatted"
+          :amount-of-sunlight="vegetable.amount_of_sunlight"
+          :button-route="`/vegetablePlantingInfo/`"
+          @card-button-clicked="handleHowToGrowClick(vegetable.id)"
+          transition="fade-transition"
+          width="360"
+        >
+          <template #button-text> Grow This! </template>
+        </VegetableCard>
+      </v-fade-transition>
     </v-container>
   </section>
 </template>

@@ -9,6 +9,7 @@ export const useVegetablesStore = defineStore("vegetable", {
     selectedVegetable: null,
     filteredVegetables: [],
     selectedMaterial: null,
+    isLoading: false,
   }),
 
   getters: {
@@ -103,6 +104,7 @@ export const useVegetablesStore = defineStore("vegetable", {
     async filterVegetablesByUserCriteria(userCriteria: string) {
       const url = `http://127.0.0.1:8000/AItool/filter-vegetables`;
       this.filteredVegetables = [];
+      this.isLoading = true;
       try {
         const response = await axios.post(url, { criteria: userCriteria });
         const results = response.data;
@@ -123,6 +125,8 @@ export const useVegetablesStore = defineStore("vegetable", {
         console.log(this.filteredVegetables);
       } catch (error: any) {
         console.log(error.message);
+      } finally {
+        this.isLoading = false;
       }
     },
 
