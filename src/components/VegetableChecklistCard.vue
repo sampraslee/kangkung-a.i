@@ -1,6 +1,6 @@
 <template>
     <v-card class="pa-6 ga-4 border-sm rounded-lg d-flex flex-column" border="none" elevation="0">
-        <v-img :src="vegetableImageUrl" height="200px" cover></v-img>
+        <v-img :src="vegetableImageUrl" cover></v-img>
 
         <v-container class="vegetableInfo pa-0 ga-3 d-flex flex-column">
             <v-card-title class="font-weight-bold text-h5 text-wrap pa-0 vegetable-title text-left">
