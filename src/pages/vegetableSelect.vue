@@ -6,18 +6,22 @@
       Not sure what to grow? Let us know what you’re looking for.
     </p>
     <v-text-field
-      append-inner-icon="mdi-send-circle"
       bg-color="white"
       clearable
       label="Ask a question"
-      icon-color="primary"
       variant="outlined"
       rounded="lg"
-      prepend-inner-icon="mdi-creation"
       v-model="userInput"
       @click:append="filterVegetables(userInput)"
       @keydown.enter="filterVegetables(userInput)"
-    ></v-text-field>
+    >
+      <template #prepend-inner>
+        <v-icon icon="mdi-creation" size="x-large" color="primary"></v-icon>
+      </template>
+      <template #append-inner>
+        <v-icon icon="mdi-send-circle" size="x-large" color="primary"></v-icon>
+      </template>
+    </v-text-field>
   </section>
   <section id="vegetable-list">
     <v-container
@@ -27,7 +31,7 @@
       <v-progress-circular
         v-if="vegetableStore.isLoading"
         color="primary"
-        size="70"
+        size="200"
         indeterminate
       >
         Finding the best vegetables for you...
