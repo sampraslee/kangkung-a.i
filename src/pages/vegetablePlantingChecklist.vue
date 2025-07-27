@@ -31,6 +31,7 @@
           :key="material.id"
           :materialImageUrl="material.image || 'https://placehold.co/40@3x.png'"
           :materialName="material.name"
+          :materialType="material.type"
           :materialDescription="material.description"
         >
         </ChecklistItemCard>
@@ -71,7 +72,9 @@ import { computed, onMounted } from "vue";
 import { useVegetablesStore } from "@/stores/vegetable";
 import VegetableChecklistCard from "@/components/VegetableChecklistCard.vue";
 import Calendar from "@/components/Calendar.vue";
+import ChecklistItemCard from "@/components/ChecklistItemCard.vue";
 import WhereToBuyCard from "@/components/WhereToBuyCard.vue";
+import CallToActionButton from "@/components/CallToActionButton.vue";
 
 const vegetableStore = useVegetablesStore();
 const { selectedVegetable } = storeToRefs(vegetableStore);
