@@ -1,10 +1,10 @@
 <template>
     <v-card class="pa-6 ga-4 border-sm rounded-lg d-flex flex-column" border="none" elevation="0">
-        <v-img :src="vegetableImageUrl"></v-img>
+        <v-img :src="vegetableImageUrl" height="200px" cover></v-img>
 
         <v-container class="vegetableInfo pa-0 ga-3 d-flex flex-column">
             <v-card-title class="font-weight-bold text-h5 text-wrap pa-0 vegetable-title text-left">
-                {{ vegetableName }}
+                {{ capitalizedVegetableName }}
             </v-card-title>
             <div class="d-inline-flex align-center ga-2">
                 <p>Harvest in:</p>
@@ -29,22 +29,18 @@
 </template>
 
 <script setup lang="ts">
-import { useVegetablesStore } from "@/stores/vegetable";
-const vegetableStore = useVegetablesStore();
+import { computed } from "vue";
 
 const props = defineProps({
     vegetableImageUrl: String,
     vegetableName: { type: String, required: true },
-    vegetableId: { type: Number, required: true },
-    estimatedHarvestTime: { type: Number, required: true },
-    wateringFrequency: { type: Number, required: true },
+    estimatedHarvestTime: { type: String, required: true },
+    wateringFrequency: { type: String, required: true },
     amountOfSunlight: { type: String, required: true },
 });
 
-function handleHowToGrowClick() {
-    // Only save the vegetableId in the selectedVegetable state
-    vegetableStore.getSelectedVegetable(props.vegetableId);
-}
-
-defineEmits(["card-button-clicked"]);
+const capitalizedVegetableName = computed(() => {
+    if (!props.vegetableName) return "";
+    return props.vegetableName.charAt(0).toUpperCase() + props.vegetableName.slice(1);
+});
 </script>
