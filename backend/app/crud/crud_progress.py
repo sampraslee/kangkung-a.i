@@ -35,23 +35,30 @@ def create_user_vegetable_progress(db: Session, progress: schemas.ProgressCreate
     return db_progress
 
 
+# In app/crud/crud_progress.py
+from sqlalchemy.orm import Session
+from app import models, schemas
+from typing import Union, Dict, Any
+
+# ... (your other crud functions like get_progress_by_id) ...
+
 def update_progress(
     db: Session,
     db_obj: models.UserVegetableProgress,
     obj_in: Union[schemas.ProgressUpdate, Dict[str, Any]]
 ) -> models.UserVegetableProgress:
-    if isinstance(obj_in, dict):
-        update_data = obj_in
-    else:
-        update_data = obj_in.model_dump(exclude_unset=True)
+    """
+    Updates a user progress entry with only the provided fields.
+    """
+    update_data = obj_in.model_dump(exclude_unset=True)
 
-    for field in update_data:
-        if hasattr(db_obj, field):
-            setattr(db_obj, field, update_data[field])
+    for field, value in update_data.items():
+        setattr(db_obj, field, value)
 
-    db.add(db_obj)
-    db.commit()
-    db.refresh(db_obj)
+    db.add(db_obj) 
+    db.commit()  
+    db.refresh(db_obj) 
+
     return db_obj
 
 

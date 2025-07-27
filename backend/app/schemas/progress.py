@@ -10,6 +10,7 @@ class ProgressBase(BaseModel):
     lastCheckup: Optional[date] = Field(None)
     checkUpNotes: Optional[str] = Field(
         None, example="Started planting. This is my first checkup.")
+    startDate: Optional[datetime] = None
 
 
 class ProgressCreate(ProgressBase):

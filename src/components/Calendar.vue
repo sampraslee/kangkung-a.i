@@ -85,7 +85,7 @@ const calculateEstimatedHarvestDate = computed(() => {
 
 async function getPlantingTimeline() {
   if (selectedDate.value) {
-    await progressStore.getPlantingTimeline();
+    await progressStore.getPlantingTimeline(selectedDate.value);
   }
 }
 </script>
