@@ -21,10 +21,10 @@
 
   <RouterLink to="/checkupChatbot">
     <CallToActionButton
-      button-text="Analyze"
       @click="UploadPhotoFile(vegetableImage)"
       v-if="vegetableImage != null"
-    ></CallToActionButton>
+      >Analyze</CallToActionButton
+    >
   </RouterLink>
 </template>
 
@@ -36,8 +36,8 @@ import { useUserStore } from "@/stores/user";
 const vegetableImage = ref(null);
 const userStore = useUserStore();
 
-function UploadPhotoFile(file: File | null){
-  if(file != null){
+function UploadPhotoFile(file: File | null) {
+  if (file != null) {
     userStore.newUploadedPhoto(file);
     console.log(file);
   }
