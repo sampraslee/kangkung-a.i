@@ -16,7 +16,9 @@
           {{ vegetableName }}
         </v-card-title>
       </div>
-      <div class="details-list d-flex flex-column flex-grow-1 justify-space-between">
+      <div
+        class="details-list d-flex flex-column flex-grow-1 justify-space-between"
+      >
         <div class="detail-row d-inline-flex align-center ga-2">
           <p class="detail-label">Harvest in:</p>
           <v-chip
