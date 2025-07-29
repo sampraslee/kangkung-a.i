@@ -4,9 +4,12 @@ import { defineStore } from "pinia";
 export const useVegetablesStore = defineStore("vegetable", {
   state: () => ({
     vegetables: [],
+    usersVegetables: null,
     materials: [],
     selectedVegetable: null,
+    filteredVegetables: [],
     selectedMaterial: null,
+    isLoading: false,
   }),
 
   getters: {
@@ -55,6 +58,36 @@ export const useVegetablesStore = defineStore("vegetable", {
       }
     },
 
+    // Select a vegetable by ID and fetch its details
+    async getSelectedVegetable(vegetableId: number | string) {
+      const url = `http://127.0.0.1:8000/vegetables/${vegetableId}`;
+      try {
+        const response = await axios.get(url);
+        this.selectedVegetable = response.data;
+        console.log(this.selectedVegetable);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    },
+
+    // Get a users vegetables
+    async getUserVegetables(userID: number) {
+      let userProgress = null;
+      let userVegetableID = null;
+      const userProgressURL = `http://127.0.0.1:8000/progress/${userID}`;
+
+      try {
+        const response = await axios.get(userProgressURL);
+        console.log(response.data);
+        userProgress = response.data;
+        userVegetableID = userProgress[0].vegetable_id;
+        this.usersVegetables = await this.getSelectedVegetable(userVegetableID);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+      console.log(this.usersVegetables);
+    },
+
     // Fetch all materials
     async getMaterials() {
       const url = "http://127.0.0.1:8000/materials";
@@ -68,15 +101,29 @@ export const useVegetablesStore = defineStore("vegetable", {
       }
     },
 
-    // Select a vegetable by ID and fetch its details
-    async getSelectedVegetable(vegetableId: number | string) {
-      const url = `http://127.0.0.1:8000/vegetables/${vegetableId}`;
+    async filterVegetablesByUserCriteria(userCriteria: string) {
+      const url = `http://127.0.0.1:8000/AItool/filter-vegetables`;
+      this.filteredVegetables = [];
+      this.isLoading = true;
       try {
-        const response = await axios.get(url);
-        this.selectedVegetable = response.data;
-        console.log(this.selectedVegetable);
+        const response = await axios.post(url, { criteria: userCriteria });
+        const results = response.data;
+
+        results.forEach((filteredVegetable) => {
+          const matchingVegetable = this.vegetables.find(
+            (vege) => vege.id === filteredVegetable.id
+          );
+          if (matchingVegetable) {
+            console.log(matchingVegetable);
+            this.filteredVegetables.push(matchingVegetable);
+          }
+        });
+
+        console.log(this.filteredVegetables);
       } catch (error: any) {
         console.log(error.message);
+      } finally {
+        this.isLoading = false;
       }
     },
 
@@ -87,6 +134,24 @@ export const useVegetablesStore = defineStore("vegetable", {
         const response = await axios.get(url);
         this.selectedMaterial = response.data;
         console.log(this.selectedMaterial);
+      } catch (error: any) {
+        console.log(error.message);
+      }
+    },
+
+    async getWeatherNotification() {
+      const url = `http://127.0.0.1:8000/AItool/weather-notification`;
+      const vegetableForReport = this.getSelectedVegetable(
+        this.usersVegetables[0].vegetable_id
+      );
+      try {
+        const response = await axios.get(url, {
+          params: {
+            vegetable: vegetableForReport,
+          },
+        });
+        const result = response.data;
+        console.log(result);
       } catch (error: any) {
         console.log(error.message);
       }
