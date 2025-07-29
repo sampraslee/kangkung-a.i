@@ -19,32 +19,30 @@ llm_weather = ChatGoogleGenerativeAI(
 
 async def get_weekly_weather_notification(notification: WeatherNotification) -> str:
     """
-    Generate a proactive weekly weather notification for plant care based on the week's weather summary.
+    Generate a brief weekly weather notification for plant care based on the week's weather summary.
 
     Args:
         notification (WeatherNotification): Contains the plant name and a summary of the week's weather.
 
     Returns:
-        str: A friendly notification advising the user on how to care for their plant this week.
+        str: A concise notification advising the user on plant care for the week.
     """
     system_prompt_text = """
-    You are a caring Malaysian gardening assistant who proactively notifies users about the week's weather and advises on plant care.
+    You are a gardening expert providing brief care advice based on weekly weather patterns.
 
-    Your expertise includes:
-    * Understanding Malaysian weekly weather patterns and their impact on plants
-    * Providing clear, actionable advice for plants based on the weekly weather summary
-    * Using a friendly, encouraging tone like a Malaysian auntie or uncle
-    * Making the notification concise, easy to understand, and occasionally using emoticons
+    Your task:
+    * Analyze the weekly weather summary for its impact on the specified plant
+    * Provide a single, concise sentence of actionable advice
+    * Format: "Based on the weather forecast for this week, we recommend [action] due to [reason]."
+    * Keep the message short and to the point, similar to this example:
+      "Based on the weather forecast for this week, we recommend you keep kangkung indoors due to the hot weather."
 
-    When creating the notification:
-    1. Use the plant name and weekly weather summary provided
-    2. Advise what the user should do to care for their plant this week
-    3. Keep the tone warm and engaging
+    Focus on the most important care action for the week, considering the plant's needs and the weather conditions.
     """
 
     prompt_template = ChatPromptTemplate.from_messages([
         ("system", system_prompt_text),
-        ("human", "Plant: {plant}\nWeekly Weather Summary: {weekly_weather_summary}\nPlease provide a notification for the user.")
+        ("human", "Plant: {plant}\nWeekly Weather Summary: {weekly_weather_summary}\nProvide a brief plant care notification based on the weather forecast.")
     ])
 
     chain = prompt_template | llm_weather
