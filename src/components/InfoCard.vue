@@ -1,17 +1,26 @@
 <template>
   <v-card
-    class="pa-6 ga-4 border-sm rounded-lg d-flex flex-row fill-height" border="none"
+    class="pa-6 ga-4 border-sm rounded-lg d-flex flex-row fill-height"
+    border="none"
     elevation="0"
   >
-    <v-img src="/public/images/info.png" width="180" v-if="!loading && !error"></v-img>
-    <div class="information">
-      <h3 class="text-primary900">For your information</h3>
-      <p>
-        <span v-if="loading">Loading...</span>
-        <span v-else-if="error" class="text-error">{{ error }}</span>
-        <span v-else>{{ weatherNotification }}</span>
-      </p>
+    <div v-if="loading" class="d-flex justify-center align-center fill-height flex-grow-1">
+      <v-progress-circular indeterminate color="primary" size="40" width="4"></v-progress-circular>
     </div>
+
+    <div v-else-if="error" class="d-flex justify-center align-center fill-height flex-grow-1">
+      <p class="text-error">{{ error }}</p>
+    </div>
+
+    <template v-else>
+      <v-img src="/public/images/info.png" width="180"></v-img>
+      <div class="information">
+        <h3 class="text-primary900">For your information</h3>
+        <p>
+          <span>{{ weatherNotification }}</span>
+        </p>
+      </div>
+    </template>
   </v-card>
 </template>
 
@@ -23,7 +32,7 @@ export default {
   data() {
     return {
       weatherNotification: '',
-      loading: true,
+      loading: true, // Initial state set to true to show loader on mount
       error: null
     }
   },
@@ -31,11 +40,11 @@ export default {
     try {
       const response = await axios.get('http://localhost:8000/AItool/weather-notification');
       this.weatherNotification = response.data.notification;
-      this.loading = false;
     } catch (e) {
       console.error("Error fetching weather notification:", e);
       this.error = 'Failed to load weather notification';
-      this.loading = false;
+    } finally {
+      this.loading = false; // Always set loading to false after the operation
     }
   }
 }
