@@ -2,14 +2,11 @@
   <v-row>
     <v-col cols="5" id="selected-vegetable">
       <div class="sticky-card">
-        <VegetableChecklistCard
-          :vegetable-image-url="selectedVegetable?.image_url" 
-          :vegetable-name="selectedVegetable?.name"
-          :vegetable-id="selectedVegetable?.id"
+        <VegetableChecklistCard :vegetable-image-url="selectedVegetable?.image_url"
+          :vegetable-name="selectedVegetable?.name" :vegetable-id="selectedVegetable?.id"
           :estimated-harvest-time="selectedVegetable?.estimated_harvest_time_formatted"
           :watering-frequency="selectedVegetable?.watering_frequency_formatted"
-          :amount-of-sunlight="selectedVegetable?.amount_of_sunlight" 
-          width="360">
+          :amount-of-sunlight="selectedVegetable?.amount_of_sunlight" width="360">
         </VegetableChecklistCard>
       </div>
     </v-col>
@@ -26,43 +23,36 @@
       </div>
       <div class="what-you-need mb-5">
         <h2 class="mb-2">What you'll need</h2>
-        <MaterialsCard 
-          v-for="material in uniqueMaterials" 
-          :key="material.id" 
-          :materialImageUrl="material.image"
-          :materialName="material.name" 
-          :materialDescription="material.description" class="mb-4">
-        </MaterialsCard>
+        <template v-if="uniqueMaterials.length">
+          <MaterialsCard v-for="material in uniqueMaterials" :key="material.id" :materialImageUrl="material.image"
+            :materialName="material.name" :materialDescription="material.description" :materialType="material.type"
+            class="mb-4">
+          </MaterialsCard>
+        </template>
+        <template v-else>
+          <div class="ml-2 text-grey">No materials found for this vegetable.</div>
+        </template>
       </div>
-      <div class="where-to-buy mb-5">
-        <h2 class="mb-2">Where to buy</h2>
-        <WhereToBuyCard
-          v-for="(store, index) in stores"
-          :key="index"
-          :store-name="store.name"
-          :store-description="store.description"
-          :store-image="store.img"
-          :store-link="store.link"
-          class="mb-4"
-        >
+      <div class="where-to-buy mb-2">
+        <h2>Where to buy</h2>
+        <p class="mb-2">We've found the nearest stores to you according to your location:
+          <v-chip color="primary" size="large" rounded="pill">
+            Petaling Jaya
+          </v-chip>
+        </p>
+        <WhereToBuyCard v-for="(store, index) in stores" :key="index" :store-name="store.name"
+          :store-description="store.description" :store-image="store.img" :store-link="store.link" class="mb-4">
         </WhereToBuyCard>
       </div>
       <div class="videos mb-5">
         <h2 class="mb-2">Videos for you</h2>
-        <VideoCard
-          v-for="(video, index) in videos"
-          :key="index"
-          :video-title="video.title"
-          :video-summary="video.summary"
-          :video-thumbnail="video.thumbnail"
-          :video-link="video.link"
-          class="mb-4"
-        >
+        <VideoCard v-for="(video, index) in videos" :key="index" :video-title="video.title"
+          :video-summary="video.summary" :video-thumbnail="video.thumbnail" :video-link="video.link" class="mb-4">
         </VideoCard>
       </div>
       <div class="mb-5">
         <CallToActionButton :to="`/vegetablePlantingChecklist/`">
-          LET'S GO
+          LET'S GROW!
         </CallToActionButton>
       </div>
     </v-col>

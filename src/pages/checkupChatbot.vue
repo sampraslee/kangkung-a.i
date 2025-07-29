@@ -35,16 +35,16 @@
 
 <script setup lang="ts">
 import axios from "axios";
-import { ref, computed, onMounted} from "vue";
+import { ref, computed, onMounted } from "vue";
 import { useUserStore } from "@/stores/user";
-import { marked } from 'marked';
+import { marked } from "marked";
 
 const chatHistory = ref<any[]>([]);
 const router = useRouter();
 const route = useRoute();
 const userStore = useUserStore();
 const userInput = ref("");
-const progressId = "2"
+const progressId = "2";
 const imageUrl = computed(() => {
   if (userStore.uploadedPhoto) {
     return URL.createObjectURL(userStore.uploadedPhoto);
@@ -75,25 +75,25 @@ async function imageAnalysis(image) {
 
 async function getGardeningAdvice(query, context) {
   const url = `http://127.0.0.1:8000/AItool/continue-chat/${progressId}`;
-  console.log(query)
+  console.log(query);
   try {
     const response = await axios.post(
       url,
-      { 
+      {
         session_id: "2",
         user_input: query,
       },
-      { 
+      {
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
         },
       }
     );
     const responseData = response.data.ai_response;
-    return responseData
+    return responseData;
   } catch (error) {
-    console.error('Error sending message:', error);
-    return error
+    console.error("Error sending message:", error);
+    return error;
   }
 }
 
@@ -101,14 +101,14 @@ async function sendMessage() {
   if (!userInput.value.trim()) return;
   const userMessage = userInput.value;
   chatHistory.value.push({ sender: "user", text: userMessage });
-  userInput.value = ""; 
+  userInput.value = "";
   const context = chatHistory.value
     .map((msg) => `${msg.sender}: ${msg.text}`)
     .join("\n");
-  const response = await getGardeningAdvice(userMessage, context); 
-  chatHistory.value.push({ sender: "bot", text: response }); 
+  const response = await getGardeningAdvice(userMessage, context);
+  chatHistory.value.push({ sender: "bot", text: response });
 }
-const renderMarkdown = (markdownText: string) => { 
+const renderMarkdown = (markdownText: string) => {
   return marked.parse(markdownText, { breaks: true });
 };
 
@@ -129,7 +129,7 @@ async function exitChatAndSummarize() {
   if (!progressId) {
     console.error("Progress ID is not available. Cannot summarize chat.");
     alert("Error: Cannot summarize chat. Progress ID missing.");
-    router.push('/vegetableSelect'); 
+    router.push("/vegetableSelect");
     return;
   }
 
@@ -138,9 +138,12 @@ async function exitChatAndSummarize() {
     const response = await axios.post(summarizeUrl);
     console.log("Chat summarized successfully:", response.data);
   } catch (error: any) {
-    console.error("Error summarizing chat:", error.response?.data || error.message);
+    console.error(
+      "Error summarizing chat:",
+      error.response?.data || error.message
+    );
   } finally {
-    router.push('/vegetableSelect');
+    router.push("/vegetableSelect");
   }
 }
 </script>
@@ -155,12 +158,12 @@ async function exitChatAndSummarize() {
   border: 1px solid #e0e0e0;
   border-radius: 8px;
   overflow: hidden;
-  position: relative; 
+  position: relative;
 }
 
 .exit-button {
   position: absolute;
-  top: 20px; 
+  top: 20px;
   right: 50px;
   z-index: 10;
 }
@@ -184,7 +187,6 @@ async function exitChatAndSummarize() {
   border-radius: 10px;
 }
 .user {
-  background-color: #e1f5fe;
   align-self: flex-end;
 }
 .bot {
@@ -199,7 +201,6 @@ async function exitChatAndSummarize() {
 .input-area {
   display: flex;
   padding: 20px;
-  background-color: white;
 }
 .message-input {
   flex-grow: 1;
