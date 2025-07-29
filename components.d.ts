@@ -23,6 +23,7 @@ declare module 'vue' {
     VegetableCard: typeof import('./src/components/VegetableCard.vue')['default']
     VegetableChecklistCard: typeof import('./src/components/VegetableChecklistCard.vue')['default']
     VideoCard: typeof import('./src/components/VideoCard.vue')['default']
+    WeatherNoti: typeof import('./src/components/WeatherNoti.vue')['default']
     WhereToBuyCard: typeof import('./src/components/WhereToBuyCard.vue')['default']
   }
 }

@@ -1,3 +1,4 @@
+# app/api/routers/AItool.py
 from fastapi import APIRouter, File, UploadFile, HTTPException, Form, Depends
 from pydantic import BaseModel
 from sqlalchemy.orm import Session
@@ -11,6 +12,7 @@ from app.services.timeline_service import (
 from app.services.vegetable_filter import filter_vegetable_by_criteria
 from app.services import chat_service
 from datetime import datetime
+from app.services import weatherAI
 
 router = APIRouter()
 
@@ -177,3 +179,23 @@ async def summarize_chat_history(progress_id: int, db: Session = Depends(deps.ge
     db.commit()
 
     return {"summary": summary}
+
+@router.get("/weather-notification", summary="Get weekly weather notification")
+async def get_weather_notification(plant: str = "Kangkung"):
+    """
+    Generates a weekly weather-based plant care notification.
+
+    Query Parameters:
+    - plant: Name of the plant (default: Kangkung)
+
+    Returns:
+    - A friendly plant care notification string
+    """
+    weekly_weather_summary = await weatherAI.fetch_and_summarize_weather()
+    notification = weatherAI.WeatherNotification(
+        plant=plant,
+        weekly_weather_summary=weekly_weather_summary
+    )
+    message = await weatherAI.get_weekly_weather_notification(notification)
+
+    return {"notification": message}
