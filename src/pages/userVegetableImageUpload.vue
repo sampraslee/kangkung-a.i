@@ -31,12 +31,12 @@
             />
 
             <CallToActionButton
+              v-if="localVegetableImage"
               to="/checkupChatbot"
               @button-clicked="uploadAndNavigate"
               class="checkup-button mt-6"
-              :disabled="!localVegetableImage"
             >
-              Checkup ({{ plantNickname }})
+              Checkup {{ plantNickname }}
             </CallToActionButton>
           </div>
         </v-col>
@@ -216,13 +216,6 @@ function uploadAndNavigate() {
   background-color: #4caf50 !important; /* Green button */
   color: white !important;
   font-weight: bold;
-}
-
-/* Disabled state styling for the checkup button */
-.checkup-button[disabled] {
-  opacity: 0.6;
-  pointer-events: none; /* Disable clicks */
-  background-color: #a5d6a7 !important; /* Lighter green when disabled */
 }
 
 @media (max-width: 960px) {
