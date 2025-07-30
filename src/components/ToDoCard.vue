@@ -5,6 +5,14 @@
   >
     <v-img src="/images/checklist.png" width="180" height="180"></v-img>
     <div class="todos">
+      <h2 class="text-primary900">Your to-dos</h2>
+      <div class="today-todos">
+        <v-chip
+          color="primary"
+          prepend-icon="mdi-calendar-clock"
+          size="large"
+          rounded="pill"
+        >
       <h3 class="text-primary900">Your todos</h3>
       <div class="today-todos">
         <v-chip color="primary" prepend-icon="mdi-calendar-clock" size="large" rounded="pill">
@@ -22,13 +30,22 @@
       </div>
 
       <div class="upcoming-todos mt-4">
-        <v-chip color="primary" prepend-icon="mdi-calendar-clock" size="large" rounded="pill">
+        <v-chip
+          color="primary"
+          prepend-icon="mdi-calendar-clock"
+          size="large"
+          rounded="pill"
+        >
           Upcoming
         </v-chip>
         <v-checkbox
           v-if="upcomingTask"
           density="compact"
-          :label="isFirstDay(upcomingTask.date) ? `[${formatDate(upcomingTask.date)}] Start planting` : `[${formatDate(upcomingTask.date)}] ${upcomingTask.event}`"
+          :label="
+            isFirstDay(upcomingTask.date)
+              ? `[${formatDate(upcomingTask.date)}] Start planting`
+              : `[${formatDate(upcomingTask.date)}] ${upcomingTask.event}`
+          "
         ></v-checkbox>
         <p v-else class="text-disabled ml-4 mt-2">All done for now! 👍</p>
       </div>
@@ -37,15 +54,15 @@
 </template>
 
 <script setup lang="ts">
-import { computed } from 'vue';
-import { useProgressStore } from '@/stores/progress';
+import { computed } from "vue";
+import { useProgressStore } from "@/stores/progress";
 
 const progressStore = useProgressStore();
 
 const todaysTasks = computed(() => {
   const today = new Date().toDateString();
 
-  return progressStore.timeline.filter(task => {
+  return progressStore.timeline.filter((task) => {
     const taskDate = new Date(task.date).toDateString();
     return taskDate === today;
   });
@@ -55,14 +72,19 @@ const upcomingTask = computed(() => {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const futureTasks = progressStore.timeline.filter(task => new Date(task.date) > today);
+  const futureTasks = progressStore.timeline.filter(
+    (task) => new Date(task.date) > today
+  );
 
   return futureTasks.length > 0 ? futureTasks[0] : null;
 });
 
 const formatDate = (dateString: string) => {
-  const options: Intl.DateTimeFormatOptions = { day: 'numeric', month: 'short' };
-  return new Date(dateString).toLocaleDateString('en-GB', options);
+  const options: Intl.DateTimeFormatOptions = {
+    day: "numeric",
+    month: "short",
+  };
+  return new Date(dateString).toLocaleDateString("en-GB", options);
 };
 
 const isFirstDay = (taskDate: string) => {
@@ -70,10 +92,11 @@ const isFirstDay = (taskDate: string) => {
     return false;
   }
   // Compare the task's date with the date of the very first item in the timeline
-  const firstEventDate = new Date(progressStore.timeline[0].date).toDateString();
+  const firstEventDate = new Date(
+    progressStore.timeline[0].date
+  ).toDateString();
   const currentTaskDate = new Date(taskDate).toDateString();
 
   return firstEventDate === currentTaskDate;
 };
-
 </script>
