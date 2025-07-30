@@ -12,11 +12,9 @@ declare module 'vue' {
     Calendar: typeof import('./src/components/Calendar.vue')['default']
     CallToActionButton: typeof import('./src/components/CallToActionButton.vue')['default']
     ChecklistItemCard: typeof import('./src/components/ChecklistItemCard.vue')['default']
-    copy: typeof import('./src/components/VegetableCard copy.vue')['default']
     GrowingVegetableCard: typeof import('./src/components/GrowingVegetableCard.vue')['default']
     HelloWorld: typeof import('./src/components/HelloWorld.vue')['default']
     InfoCard: typeof import('./src/components/InfoCard.vue')['default']
-    MarkdownRenderer: typeof import('./src/components/MarkdownRenderer.vue')['default']
     MaterialsCard: typeof import('./src/components/MaterialsCard.vue')['default']
     PlantNewVegetableCard: typeof import('./src/components/PlantNewVegetableCard.vue')['default']
     RouterLink: typeof import('vue-router')['RouterLink']
@@ -24,8 +22,8 @@ declare module 'vue' {
     ToDoCard: typeof import('./src/components/ToDoCard.vue')['default']
     VegetableCard: typeof import('./src/components/VegetableCard.vue')['default']
     VegetableChecklistCard: typeof import('./src/components/VegetableChecklistCard.vue')['default']
-    VegetableInfoCard: typeof import('./src/components/VegetableInfoCard.vue')['default']
     VideoCard: typeof import('./src/components/VideoCard.vue')['default']
+    WeatherNoti: typeof import('./src/components/WeatherNoti.vue')['default']
     WhereToBuyCard: typeof import('./src/components/WhereToBuyCard.vue')['default']
   }
 }

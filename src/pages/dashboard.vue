@@ -16,10 +16,14 @@
       <GrowingVegetableCard></GrowingVegetableCard>
     </v-container>
   </section>
+  <section id="weather-notification" class="mt-4">
+    <WeatherNoti /> <!-- Add WeatherNoti component here -->
+  </section>
 </template>
 
 <script setup lang="ts">
 import { onMounted } from "vue";
 import CallToActionButton from "@/components/CallToActionButton.vue";
 import GrowingVegetableCard from "@/components/GrowingVegetableCard.vue";
+import WeatherNoti from "@/components/WeatherNoti.vue";
 </script>
