@@ -12,17 +12,21 @@
     </v-col>
     <v-col cols="7" id="planting-guide">
       <div class="how-to-grow mb-5">
-        <h2 class="mb-2">How to grow</h2>
-        <div class="ml-2">
-          <ol>
-            <li v-for="(instruction, index) in plantingInstructions" :key="index" class="ml-2 mb-2">
-              {{ instruction }}
-            </li>
-          </ol>
-        </div>
+        <h2 class="mb-2">How to grow:</h2>
+        <v-card class="d-flex ga-4 pa-4 rounded-lg align-start" elevation="0">
+          <div class="d-flex flex-column">
+            <v-card-text class="pa-0">
+              <ol class="instructions-list pl-6">
+                <li v-for="(instruction, index) in plantingInstructions" :key="index" class="mb-2 pl-2">
+                  {{ instruction }}
+                </li>
+              </ol>
+            </v-card-text>
+          </div>
+        </v-card>
       </div>
       <div class="what-you-need mb-5">
-        <h2 class="mb-2">What you'll need</h2>
+        <h2 class="mb-2">What you'll need:</h2>
         <template v-if="uniqueMaterials.length">
           <MaterialsCard v-for="material in uniqueMaterials" :key="material.id" :materialImageUrl="material.image"
             :materialName="material.name" :materialDescription="material.description" :materialType="material.type"
@@ -34,7 +38,7 @@
         </template>
       </div>
       <div class="where-to-buy mb-2">
-        <h2>Where to buy</h2>
+        <h2>Where to buy:</h2>
         <p class="mb-2">We've found the nearest stores to you according to your location:
           <v-chip color="primary" size="large" rounded="pill">
             Petaling Jaya
@@ -45,7 +49,7 @@
         </WhereToBuyCard>
       </div>
       <div class="videos mb-5">
-        <h2 class="mb-2">Videos for you</h2>
+        <h2 class="mb-2">Videos for you:</h2>
         <VideoCard v-for="(video, index) in videos" :key="index" :video-title="video.title"
           :video-summary="video.summary" :video-thumbnail="video.thumbnail" :video-link="video.link" class="mb-4">
         </VideoCard>
@@ -135,5 +139,8 @@ const uniqueMaterials = computed(() =>
   top: 32px;
   /* Adjust as needed for your header */
   z-index: 2;
+}
+.instructions-list {
+  list-style-position: outside;
 }
 </style>
