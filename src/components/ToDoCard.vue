@@ -6,7 +6,7 @@
   >
     <v-img src="/public/images/checklist.png" width="180" height="180"></v-img>
     <div class="todos">
-      <h3 class="text-primary900">Your todos</h3>
+      <h2 class="text-primary900">Your to-dos</h2>
       <div class="today-todos">
         <v-chip
           color="primary"
