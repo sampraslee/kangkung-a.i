@@ -48,7 +48,6 @@
           :amount-of-sunlight="vegetable.amount_of_sunlight"
           :button-route="`/vegetablePlantingInfo/`"
           @card-button-clicked="handleHowToGrowClick(vegetable.id)"
-          transition="fade-transition"
           width="360"
         >
           <template #button-text> Grow This! </template>
