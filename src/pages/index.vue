@@ -6,11 +6,9 @@
   <v-divider color="primary900" thickness="0.75" opacity="0.5" class="mb-5 mt-5"></v-divider>
   <section id="dashboard">
     <v-row justify="space-between">
-      <v-col col="6">
-        <ToDoCard></ToDoCard>
+      <v-col cols="12" md="6"> <ToDoCard></ToDoCard>
       </v-col>
-      <v-col col="6">
-        <InfoCard></InfoCard>
+      <v-col cols="12" md="6"> <InfoCard></InfoCard>
       </v-col>
     </v-row>
     <br>
@@ -41,6 +39,12 @@ import PlantNewVegetableCard from "@/components/PlantNewVegetableCard.vue";
 
 const vegetableStore = useVegetablesStore();
 const { selectedVegetable } = storeToRefs(vegetableStore);
+
+// Assuming handleHowToGrowClick is defined somewhere, if not remove or add it
+const handleHowToGrowClick = (id) => {
+  console.log(`How to Grow clicked for vegetable ID: ${id}`);
+  // Add your navigation logic here, e.g., router.push(...)
+};
 
 onMounted(() => {
   console.log("mounted in dashboard");
