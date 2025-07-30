@@ -1,7 +1,6 @@
 <template>
   <v-card
-    class="pa-6 ga-4 border-sm rounded-lg d-flex flex-column vegetable-card"
-    border="none"
+    class="pa-6 ga-4 border-thin rounded-lg d-flex flex-column vegetable-card"
     elevation="0"
   >
     <div class="d-flex justify-center">
@@ -16,7 +15,9 @@
           {{ vegetableName }}
         </v-card-title>
       </div>
-      <div class="details-list d-flex flex-column flex-grow-1 justify-space-between">
+      <div
+        class="details-list d-flex flex-column flex-grow-1 justify-space-between"
+      >
         <div class="detail-row d-inline-flex align-center ga-2">
           <p class="detail-label">Harvest in:</p>
           <v-chip
@@ -88,10 +89,15 @@ defineEmits(["card-button-clicked"]);
 
 <style scoped>
 .vegetable-card {
+  transition: all 0.2s ease-in-out;
   min-height: 500px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+}
+.vegetable-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0px 8px 20px rgba(27, 94, 32, 0.3) !important;
 }
 .vegetable-title-block {
   min-height: 60px; /* Adjust this value as needed for your design */

@@ -25,7 +25,7 @@ const kangkungTheme = {
     secondary: "#008BA3",
     white: "#FEFEFA",
     black: "#26221E",
-    background: "#EFEAE4",
+    background: "#F4EADF",
   },
 };
 export default createVuetify({

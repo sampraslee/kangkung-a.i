@@ -1,9 +1,6 @@
 <!-- checkupChatbot.vue -->
 <template>
   <div class="chat-container">
-    <v-btn @click="exitChatAndSummarize" color="error" class="exit-button">
-      Exit Chat
-    </v-btn>
     <div class="chat-history">
       <div
         v-for="(message, index) in chatHistory"
@@ -14,21 +11,27 @@
         <v-img
           v-if="message.image"
           :src="message.image"
-          class="message-image"
+          :width="300"
+          class="message-image rounded-lg"
         />
         <p class="message-text" v-html="renderMarkdown(message.text)"></p>
       </div>
     </div>
-    <div class="input-area">
+    <div class="input-area d-flex flex-column">
       <v-textarea
         v-model="userInput"
-        class="message-input"
+        class="message-input bg-white"
         rows="3"
         placeholder="Type your message here..."
         variant="outlined"
         @keydown.enter.exact.prevent="sendMessage"
       ></v-textarea>
-      <v-btn @click="sendMessage" color="primary">Send</v-btn>
+      <div class="action-button d-flex justify-space-between">
+        <v-btn @click="exitChatAndSummarize" color="error" class="exit-button">
+          Exit Chat
+        </v-btn>
+        <v-btn @click="sendMessage" color="primary">Send</v-btn>
+      </div>
     </div>
   </div>
 </template>
@@ -153,20 +156,17 @@ async function exitChatAndSummarize() {
   display: flex;
   flex-direction: column;
   height: 100vh;
-  max-width: 800px;
   margin: 0 auto;
-  border: 1px solid #e0e0e0;
-  border-radius: 8px;
   overflow: hidden;
   position: relative;
 }
 
-.exit-button {
+/* .exit-button {
   position: absolute;
   top: 20px;
   right: 50px;
   z-index: 10;
-}
+} */
 .message-text {
   max-width: 70%;
   padding: 10px 15px;
@@ -178,24 +178,28 @@ async function exitChatAndSummarize() {
 .chat-history {
   flex-grow: 1;
   overflow-y: auto;
-  padding: 20px;
   max-height: 100%;
 }
 .message {
   margin-bottom: 10px;
   padding: 10px;
-  border-radius: 10px;
+  /* border-radius: 10px; */
 }
 .user {
+  width: fit-content;
   align-self: flex-end;
+  background-color: #fefefa;
+  color: #004522;
+  border-radius: 1rem 0 1rem 1rem;
 }
 .bot {
-  background-color: #f5f5f5;
+  background-color: transparent;
   align-self: flex-start;
+  border-radius: 0 1rem;
 }
 .message-image {
-  max-width: 200px;
-  max-height: 200px;
+  /* max-width: 200px;
+  max-height: 200px; */
   margin-bottom: 10px;
 }
 .input-area {

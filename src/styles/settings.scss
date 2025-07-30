@@ -9,7 +9,30 @@
       class: w,
       values: (
         90: 90%,
+        80: 80%,
       ),
     ),
   )
 );
+
+// Utopia fluid type sclae
+@use "/node_modules/utopia-core-scss/src/utopia.scss" as utopia;
+
+/* @link https://utopia.fyi/type/calculator?c=320,16,1.618,19200,24,1.618,5,2,&s=0.75|0.5|0.25,1.5|2|3|4|6,s-l&g=s,l,xl,12 */
+
+:root {
+  @include utopia.generateTypeScale(
+    (
+      "minWidth": 320,
+      "maxWidth": 19200,
+      "minFontSize": 16,
+      "maxFontSize": 24,
+      "minTypeScale": 1.618,
+      "maxTypeScale": 1.618,
+      "positiveSteps": 5,
+      "negativeSteps": 2,
+      "prefix": "step-",
+      "relativeTo": "viewport-width",
+    )
+  );
+}
