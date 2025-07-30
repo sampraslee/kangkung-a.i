@@ -1,7 +1,7 @@
 <template>
   <section id="user-welcome">
-    <h1 class="text-primary900">Good afternoon, User</h1>
-    <p>Welcome back, let's get you up to speed with your growing vegetables</p>
+    <h1 class="text-primary900">Welcome, User</h1>
+    <p>Let's get you up to speed!</p>
   </section>
   <v-divider color="primary900" thickness="0.75" opacity="0.5" class="mb-5 mt-5"></v-divider>
   <section id="dashboard">
@@ -16,12 +16,16 @@
     <br>
     <div class="d-flex flex-row flex-wrap justify-start ga-4 align-stretch mt-6">
       <h1 class="text-primary900">Here's the progress of your vegetables:</h1>
-      <v-divider color="primary900" thickness="0.75" opacity="0.5" class="mb-5"></v-divider>
-      <GrowingVegetableCard v-if="selectedVegetable" :vegetable-image-url="selectedVegetable.image_url"
-        :vegetable-name="selectedVegetable.name" :vegetable-id="selectedVegetable.id" :estimated-harvest-time="
-          selectedVegetable.estimated_harvest_time_formatted
-        " :watering-frequency="selectedVegetable.watering_frequency_formatted"
-        :amount-of-sunlight="selectedVegetable.amount_of_sunlight" :button-route="`/userVegetableImageUpload/`"
+      <v-divider color="primary900" thickness="0.75" opacity="0.5" class="mb-2"></v-divider>
+      <GrowingVegetableCard 
+        v-if="selectedVegetable" 
+        :vegetable-image-url="selectedVegetable.image_url"
+        :vegetable-name="selectedVegetable.name" 
+        :vegetable-id="selectedVegetable.id" 
+        :estimated-harvest-time="selectedVegetable.estimated_harvest_time_formatted" 
+        :watering-frequency="selectedVegetable.watering_frequency_formatted"
+        :amount-of-sunlight="selectedVegetable.amount_of_sunlight" 
+        :button-route="`/userVegetableImageUpload/`"
         @card-button-clicked="handleHowToGrowClick(vegetable.id)" width="360">
         <template #button-text> Get a checkup </template>
       </GrowingVegetableCard>

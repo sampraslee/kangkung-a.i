@@ -7,8 +7,8 @@
   >
     <v-img src="/public/images/new plant.png"></v-img>
 
-    <RouterLink to="/vegetableselect">
-      <v-card-text class="text-white text-body-1 text-center"
+    <RouterLink to="/vegetableselect" class="text-white text-decoration-none">
+      <v-card-text class="text-body-1 text-center"
         ><v-icon icon="mdi-plus-circle"></v-icon> Grow a new
         vegetable</v-card-text
       >
