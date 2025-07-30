@@ -165,13 +165,13 @@ def convert_periods_to_dates(
         while current_date <= harvest_date:
 
             # Format the date as: "Day Month Date Year"
-            formatted_date = datetime.strftime(current_date, "%a, %b %d, %Y")
+            formatted_date = datetime.strftime(current_date, "%a %b %d %Y")
             # Add the event for the current date
             events.append({"event": event_name, "date": formatted_date})
             # Increment to the next event date
             current_date += duration
         # Sort all events by date to create a clean timeline
     sorted_events = sorted(
-        events, key=lambda e: datetime.strptime(e["date"], "%a, %b %d, %Y")
+        events, key=lambda e: datetime.strptime(e["date"], "%a %b %d %Y")
     )
     return sorted_events
