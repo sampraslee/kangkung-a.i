@@ -1,11 +1,12 @@
 <template>
   <v-card
-    class="pa-6 ga-4 border-sm rounded-lg d-flex flex-row fill-height" border="none"
+    class="pa-6 ga-4 border-sm rounded-lg d-flex flex-row fill-height"
+    border="none"
     elevation="0"
   >
     <v-img src="/images/checklist.png" width="180" height="180"></v-img>
     <div class="todos">
-      <h2 class="text-primary900">Your to-dos</h2>
+      <h3 class="text-primary900">Your todos</h3>
       <div class="today-todos">
         <v-chip
           color="primary"
@@ -13,9 +14,6 @@
           size="large"
           rounded="pill"
         >
-      <h3 class="text-primary900">Your todos</h3>
-      <div class="today-todos">
-        <v-chip color="primary" prepend-icon="mdi-calendar-clock" size="large" rounded="pill">
           Today
         </v-chip>
         <div v-if="todaysTasks.length > 0">
