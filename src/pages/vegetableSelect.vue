@@ -32,9 +32,9 @@
         v-if="vegetableStore.isLoading"
         color="primary"
         size="200"
+        width="4"
         indeterminate
       >
-        Finding the best vegetables for you...
       </v-progress-circular>
       <v-fade-transition v-else group>
         <VegetableCard

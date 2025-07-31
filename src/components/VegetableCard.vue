@@ -97,7 +97,7 @@ defineEmits(["card-button-clicked"]);
 }
 .vegetable-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0px 8px 20px rgba(27, 94, 32, 0.3) !important;
+  box-shadow: 0 8px 25px rgba(0, 165, 80, 0.1) !important;
 }
 .vegetable-title-block {
   min-height: 60px; /* Adjust this value as needed for your design */

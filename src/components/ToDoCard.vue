@@ -24,7 +24,8 @@
             :label="isFirstDay(task.date) ? 'Start planting' : task.event"
           ></v-checkbox>
         </div>
-        <p v-else class="text-disabled ml-4 mt-2">None for today ✨</p>
+        <v-checkbox density="compact" label="Plant kangkung seeds"></v-checkbox>
+        <!-- <p v-else class="text-disabled ml-4 mt-2">None for today ✨</p> -->
       </div>
 
       <div class="upcoming-todos mt-4">

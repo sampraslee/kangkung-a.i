@@ -1,7 +1,7 @@
 <!-- checkupChatbot.vue -->
 <template>
   <div class="chat-container">
-    <div class="chat-history">
+    <div class="chat-history d-flex flex-column">
       <div
         v-for="(message, index) in chatHistory"
         :key="index"
@@ -186,7 +186,7 @@ async function exitChatAndSummarize() {
   /* border-radius: 10px; */
 }
 .user {
-  width: fit-content;
+  width: 500px;
   align-self: flex-end;
   background-color: #fefefa;
   color: #004522;
